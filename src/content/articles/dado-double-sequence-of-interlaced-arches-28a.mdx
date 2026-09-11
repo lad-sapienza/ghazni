@@ -13,4 +13,4 @@ import FindsQuery from '../../components/finds/FindsQuery.astro';
 <p>The artifacts were found re-employed in the Ghazni area (the surveys occurred in the late 1950s-1970s); some were first recorded in the Rawza Museum in Ghazni in the same period.</p>
 <p>Type 28a differs from dadoes type 28b for the vegetal motifs.</p>
 <hr />
-<p><FindsQuery shortsql="@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 28a)%" /></p>
+<p><FindsQuery query={{"tb":"finds","filter":{"_and":[{"archaeological_context":{"_eq":"Islamic"}},{"object":{"_eq":"Dado panel"}},{"typology":{"_icontains":"(type 28a)"}}]}}} /></p>

@@ -1,10 +1,14 @@
 import findsTaxonomy from '../data/finds-taxonomy.json' with { type: 'json' };
+import type { BdusQuery } from './bdus.ts';
 
 export interface TaxonomyNode {
   id: string;
   label: string;
-  shortsql?: string;
   items?: Record<string, TaxonomyNode>;
+  /** Leaf query, in v5's native filter shape (see scripts/convert-taxonomy.mjs). */
+  query?: BdusQuery;
+  /** Leaf placeholder ("this section isn't published yet") — was ShortSQL strings prefixed "MSG:" in the original. */
+  message?: string;
 }
 
 const root = findsTaxonomy.finds as unknown as Record<string, TaxonomyNode>;

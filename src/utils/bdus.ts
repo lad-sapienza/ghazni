@@ -7,7 +7,7 @@
  * bundle — see README "Updating the site" for why this matters for a fully
  * static, GitHub Pages–hosted site.
  */
-import { parseShortSQL, secondarySortField, type FilterNode } from './shortsql.ts';
+import type { FilterNode } from './shortsql.ts';
 
 // import.meta.env when Vite processes this (Astro pages/components); plain
 // process.env when scripts/fetch-images.mjs imports it directly via Node.
@@ -90,34 +90,6 @@ export async function bdusRecord(tb: string, id: number | string): Promise<any> 
   return bdusFetch(`/api/record/${tb}/${id}`);
 }
 
-/**
- * Runs an original ShortSQL string against v5, translating it first.
- * Applies the secondary sort key in JS when the query had one (author,year)
- * since v5's list endpoint only accepts a single sort field.
- */
-export async function bdusQueryShortSQL(shortsql: string): Promise<any[]> {
-  const parsed = parseShortSQL(shortsql);
-  let rows = await bdusListAll(parsed.tb, {
-    filter: parsed.filter,
-    sortField: parsed.sortField,
-    sortDir: parsed.sortDir,
-    limit: parsed.limit,
-  });
-
-  const secondary = secondarySortField(shortsql);
-  if (secondary && parsed.sortField) {
-    const primary = parsed.sortField;
-    const dir = parsed.sortDir === 'desc' ? -1 : 1;
-    rows = [...rows].sort((a, b) => {
-      const p = String(a[primary] ?? '').localeCompare(String(b[primary] ?? '')) * dir;
-      if (p !== 0) return p;
-      return String(a[secondary] ?? '').localeCompare(String(b[secondary] ?? ''));
-    });
-  }
-
-  return rows;
-}
-
 /** Runs `tasks` with at most `concurrency` in flight at once. */
 async function pool<T>(items: T[], concurrency: number, fn: (item: T) => Promise<any>): Promise<any[]> {
   const results: any[] = new Array(items.length);
@@ -132,31 +104,40 @@ async function pool<T>(items: T[], concurrency: number, fn: (item: T) => Promise
   return results;
 }
 
-/**
- * Runs a ShortSQL query and returns FULL record detail for every match
- * (the preview/list endpoint doesn't include files or plugin data, which
- * grids and record pages both need for thumbnails/measures).
- */
-export async function bdusQueryFull(shortsql: string): Promise<any[]> {
-  const parsed = parseShortSQL(shortsql);
-  const previews = await bdusListAll(parsed.tb, {
-    filter: parsed.filter,
-    sortField: parsed.sortField,
-    sortDir: parsed.sortDir,
-    limit: parsed.limit,
-  });
-  const secondary = secondarySortField(shortsql);
-  let records = await pool(previews, 10, (p) => bdusRecord(parsed.tb, p.id));
+/** A query in v5's own (native) shape — what finds-taxonomy.json and article embeds carry directly, no ShortSQL involved. */
+export interface BdusQuery {
+  tb: string;
+  filter?: FilterNode;
+  sortField?: string;
+  sortDir?: 'asc' | 'desc';
+  /** A second sort key, applied in JS (v5's list endpoint only accepts one `sort_field`) — e.g. bibliography's author-then-year. */
+  sortField2?: string;
+  limit?: number;
+}
 
-  if (parsed.sortField) {
-    const primary = parsed.sortField;
-    const dir = parsed.sortDir === 'desc' ? -1 : 1;
+/**
+ * Runs a query and returns FULL record detail for every match (the
+ * preview/list endpoint doesn't include files or plugin data, which grids
+ * and record pages both need for thumbnails/measures).
+ */
+export async function bdusQueryFull(query: BdusQuery): Promise<any[]> {
+  const previews = await bdusListAll(query.tb, {
+    filter: query.filter,
+    sortField: query.sortField,
+    sortDir: query.sortDir,
+    limit: query.limit,
+  });
+  let records = await pool(previews, 10, (p) => bdusRecord(query.tb, p.id));
+
+  if (query.sortField) {
+    const primary = query.sortField;
+    const dir = query.sortDir === 'desc' ? -1 : 1;
     records = [...records].sort((a, b) => {
       const av = a.core?.[primary]?.val ?? '';
       const bv = b.core?.[primary]?.val ?? '';
       const p = String(av).localeCompare(String(bv), undefined, { numeric: true }) * dir;
-      if (p !== 0 || !secondary) return p;
-      return String(a.core?.[secondary]?.val ?? '').localeCompare(String(b.core?.[secondary]?.val ?? ''));
+      if (p !== 0 || !query.sortField2) return p;
+      return String(a.core?.[query.sortField2]?.val ?? '').localeCompare(String(b.core?.[query.sortField2]?.val ?? ''));
     });
   }
 

@@ -7,7 +7,7 @@ import FindsGrid from '../../../../components/finds/FindsGrid.astro';
 import { findUrl } from '../../../../utils/recordIndex';
 
 export async function getStaticPaths() {
-  const records = await bdusQueryFull('@funcomplex~>invno');
+  const records = await bdusQueryFull({ tb: 'funcomplex', sortField: 'invno', sortDir: 'asc' });
   return records.map((record) => ({
     params: { invno: record.core?.invno?.val },
     props: { record },

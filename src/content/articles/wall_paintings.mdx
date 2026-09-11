@@ -12,4 +12,4 @@ import FindsQuery from '../../components/finds/FindsQuery.astro';
 <hr />
 <p>&nbsp;</p>
 <h2>Records</h2>
-<p><FindsQuery shortsql="@finds~?archaeological_context|=|Buddhist||and|object|like|%Wall painting%" /></p>
+<p><FindsQuery query={{"tb":"finds","filter":{"_and":[{"archaeological_context":{"_eq":"Buddhist"}},{"object":{"_icontains":"Wall painting"}}]}}} /></p>

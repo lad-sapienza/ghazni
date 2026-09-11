@@ -14,7 +14,7 @@ import FindsQuery from '../../components/finds/FindsQuery.astro';
 <div>&nbsp;</div>
 <div><strong>The section is in preparation.</strong> A comprehensive database of 43 funerary areas will be fully accessible in the coming months. Each complex will be searchable through an interactive map and linked to related finds.&nbsp;</div>
 <div><hr /></div>
-<div><FindsQuery shortsql="@funcomplex~>invno" /></div>
+<div><FindsQuery query={{"tb":"funcomplex","sortField":"invno","sortDir":"asc"}} /></div>
 <div><hr />
 <p>&nbsp;</p>
 </div>

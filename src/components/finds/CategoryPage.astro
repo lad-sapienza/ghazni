@@ -38,13 +38,8 @@ const basePath = `/${domain}/finds${parts.length ? '/' + parts.join('/') : ''}`;
 const imagePath = [domain, ...parts].join('/');
 
 let records: any[] | undefined;
-let placeholderMessage: string | undefined;
-if (!node.items) {
-  if (node.shortsql?.startsWith('MSG:')) {
-    placeholderMessage = node.shortsql.replace(/^MSG:\s*/, '');
-  } else if (node.shortsql) {
-    records = await bdusQueryFull(node.shortsql);
-  }
+if (!node.items && node.query) {
+  records = await bdusQueryFull(node.query);
 }
 ---
 
@@ -67,8 +62,8 @@ if (!node.items) {
 
     {node.items ? (
       <CategoryTiles node={node} basePath={basePath} imagePath={imagePath} />
-    ) : placeholderMessage ? (
-      <p>{placeholderMessage}</p>
+    ) : node.message ? (
+      <p>{node.message}</p>
     ) : records ? (
       <FindsGrid records={records} hrefFor={(invNo) => `${basePath}/record/${encodeURIComponent(invNo)}`} />
     ) : (

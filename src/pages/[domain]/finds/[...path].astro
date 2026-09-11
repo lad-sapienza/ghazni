@@ -14,8 +14,8 @@ export async function getStaticPaths() {
     for (const { parts, node } of flattenDomain(domain)) {
       paths.push({ params: { domain, path: parts.join('/') }, props: { type: 'category', domain, parts, node } });
 
-      if (!node.items && node.shortsql && !node.shortsql.startsWith('MSG:')) {
-        const records = await bdusQueryFull(node.shortsql);
+      if (!node.items && node.query) {
+        const records = await bdusQueryFull(node.query);
         for (const record of records) {
           const invNo = record.core?.inv_no?.val;
           if (!invNo) continue;

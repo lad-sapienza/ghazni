@@ -34,38 +34,67 @@ const already = new Set(readdirSync(outDir));
 
 const recordIds = new Set(); // "tb:id"
 
-async function collectFromShortSQLs(shortsqls) {
-  const { parseShortSQL } = await import('../src/utils/shortsql.ts');
-  for (const shortsql of shortsqls) {
-    if (!shortsql || shortsql.startsWith('MSG:')) continue;
-    const parsed = parseShortSQL(shortsql);
-    const rows = await bdusListAll(parsed.tb, {
-      filter: parsed.filter,
-      sortField: parsed.sortField,
-      sortDir: parsed.sortDir,
-      limit: parsed.limit,
+async function collectFromQueries(queries) {
+  for (const query of queries) {
+    if (!query) continue;
+    const rows = await bdusListAll(query.tb, {
+      filter: query.filter,
+      sortField: query.sortField,
+      sortDir: query.sortDir,
+      limit: query.limit,
     });
-    for (const row of rows) recordIds.add(`${parsed.tb}:${row.id}`);
+    for (const row of rows) recordIds.add(`${query.tb}:${row.id}`);
   }
 }
 
 // 1. Every taxonomy leaf, both domains.
-const taxonomyShortsqls = [
-  ...flattenDomain('islamic').map((n) => n.node.shortsql),
-  ...flattenDomain('buddhist').map((n) => n.node.shortsql),
+const taxonomyQueries = [
+  ...flattenDomain('islamic').map((n) => n.node.query),
+  ...flattenDomain('buddhist').map((n) => n.node.query),
 ].filter(Boolean);
-await collectFromShortSQLs(taxonomyShortsqls);
+await collectFromQueries(taxonomyQueries);
 
-// 2. Every inline [[browseData]] embed, now `<FindsQuery shortsql="...">` in the migrated MDX.
+// 2. Every inline data embed, `<FindsQuery query={...} />` in the migrated MDX
+// (was [[browseData]]...[[/browseData]] in the original site). The query
+// object can nest (filter._and/._or), so a non-greedy regex would truncate
+// at the first inner `}` — find the JSX attribute's `{`, then scan for its
+// matching `}` by brace depth instead.
+function extractJsxObjectAttrs(text, attrName) {
+  const results = [];
+  const marker = `${attrName}={`;
+  let from = 0;
+  while (true) {
+    const start = text.indexOf(marker, from);
+    if (start === -1) break;
+    // `marker` already ends at the JSX-expression-container '{'; the value
+    // itself is an object literal, so its own '{' is the next char —
+    // that's the one to depth-count from (else the slice below would keep
+    // the wrapper brace too and produce invalid, unparseable JSON).
+    const objStart = start + marker.length;
+    let depth = 0;
+    let i = objStart;
+    for (; i < text.length; i++) {
+      if (text[i] === '{') depth++;
+      else if (text[i] === '}') {
+        depth--;
+        if (depth === 0) break;
+      }
+    }
+    results.push(text.slice(objStart, i + 1));
+    from = i + 1;
+  }
+  return results;
+}
+
 const articlesDir = join(root, 'src/content/articles');
-const inlineShortsqls = [];
+const inlineQueries = [];
 for (const file of readdirSync(articlesDir)) {
   const text = readFileSync(join(articlesDir, file), 'utf8');
-  for (const m of text.matchAll(/<FindsQuery shortsql="((?:[^"\\]|\\.)*)"/g)) {
-    inlineShortsqls.push(m[1].replace(/\\"/g, '"'));
+  for (const json of extractJsxObjectAttrs(text, 'query')) {
+    inlineQueries.push(JSON.parse(json));
   }
 }
-await collectFromShortSQLs(inlineShortsqls);
+await collectFromQueries(inlineQueries);
 
 console.log(`Records to check for images: ${recordIds.size}`);
 

@@ -1,8 +1,8 @@
 /**
  * Global inv_no -> canonical page URL index, built once (top-level await,
  * so every importer shares the same resolved module) by walking the full
- * taxonomy and running every leaf's ShortSQL query — lightweight (id +
- * inv_no only), not the full record detail.
+ * taxonomy and running every leaf's query — lightweight (id + inv_no
+ * only), not the full record detail.
  *
  * Needed because a handful of articles embed a `[[browseData]]` finds query
  * directly in their prose (see migration notes), outside of any taxonomy
@@ -13,21 +13,18 @@
  */
 import { flattenDomain } from './taxonomy.ts';
 import { bdusListAll } from './bdus.ts';
-import { parseShortSQL } from './shortsql.ts';
 
 const invNoToUrl = new Map<string, string>();
 
 async function indexDomain(domain: 'islamic' | 'buddhist') {
   const nodes = flattenDomain(domain);
   for (const { parts, node } of nodes) {
-    if (!node.shortsql || node.shortsql.startsWith('MSG:')) continue;
-    const parsed = parseShortSQL(node.shortsql);
-    if (parsed.tb !== 'finds') continue; // funcomplex has its own listing page, not indexed here
+    if (!node.query || node.query.tb !== 'finds') continue; // funcomplex has its own listing page, not indexed here
     const rows = await bdusListAll('finds', {
-      filter: parsed.filter,
-      sortField: parsed.sortField,
-      sortDir: parsed.sortDir,
-      limit: parsed.limit,
+      filter: node.query.filter,
+      sortField: node.query.sortField,
+      sortDir: node.query.sortDir,
+      limit: node.query.limit,
     });
     const base = `/${domain}/${parts.join('/')}`;
     for (const row of rows) {
