@@ -2,7 +2,8 @@
 // Mirrors sites/default/modules/browseData/templates/record.php's 12-block
 // layout for the 3 finds contexts (islamic/buddhist/coins) and, when
 // `record.metadata.tb_id === 'funcomplex'`, the funerary-complex context.
-import { localFileUrl } from '../../utils/localImages';
+import { localFileUrl, localFileDimensions } from '../../utils/localImages';
+import Gallery from '@lad-sapienza/scms-core/components/Gallery/Gallery.astro';
 
 interface Props {
   record: any;
@@ -28,6 +29,14 @@ function fileUrl(f: any) {
 const files: any[] = record.files ?? [];
 const mainImg = fileUrl(files[0]);
 const otherImages = files.slice(1).filter((f) => ['jpg', 'jpeg', 'png'].includes(String(f.ext).toLowerCase()));
+
+function toGalleryImage(f: any) {
+  const src = fileUrl(f);
+  const { width, height } = localFileDimensions(f.id, f.ext);
+  return { src, thumb: src, width, height, alt: f.description ?? f.filename ?? String(invNo) };
+}
+const mainGalleryImage = files[0] ? [toGalleryImage(files[0])] : [];
+const otherGalleryImages = otherImages.map(toGalleryImage);
 
 // Block 1/2: context header line.
 let block1 = '';
@@ -80,24 +89,14 @@ const inscriptions: any[] = record.plugins?.m_inscriptions?.data ?? [];
   <div class="rec-body mt-5">
     <div class="row">
       <div class="col-5">
-        <div class="main_img text-center">
-          <a href={mainImg} data-fancybox="record-image">
-            <img src={mainImg} alt={String(invNo)} class="img-fluid" />
-          </a>
+        <div class="main_img record-gallery-main">
+          <Gallery images={mainGalleryImage} columns={{ min: 200, max: 1 }} />
         </div>
 
-        {otherImages.length > 0 && (
+        {otherGalleryImages.length > 0 && (
           <div class="mt-5">
             <h3 class="text-label mb-3 text-white">Other images</h3>
-            <div class="row">
-              {otherImages.map((f) => (
-                <div class="col-4">
-                  <a href={fileUrl(f)} data-fancybox="record-image">
-                    <img src={fileUrl(f)} class="img-fluid" alt={f.description ?? f.filename} />
-                  </a>
-                </div>
-              ))}
-            </div>
+            <Gallery images={otherGalleryImages} columns={{ min: 140, max: 3 }} />
           </div>
         )}
       </div>
