@@ -6,7 +6,7 @@
 
 export const userConfig = {
   // Site URL (required for sitemap and canonical URLs)
-  site: 'https://ghazni.bdus.cloud',
+  site: 'https://ghazni.lad-sapienza.it',
 
   // Base path (if deploying to a subdirectory, e.g. GitHub Pages project sites)
   // base: '/my-site',
