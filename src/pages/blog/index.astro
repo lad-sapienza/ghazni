@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('articles'))
+  .filter((a) => a.data.tags.includes('blog'))
+  .sort((a, b) => (b.data.publish ?? '').localeCompare(a.data.publish ?? ''));
+---
+
+<BaseLayout title="Blog">
+  <div class="submenu"><div class="container"><h1>Blog</h1></div></div>
+
+  <div class="container my-5 py-5">
+    <div class="blog">
+      {posts.map((post) => {
+        return (
+          <article class="blog-item">
+            <h3>{post.data.title}</h3>
+            <hr />
+            <p class="text-secondary">
+              Posted{post.data.author && ` by ${post.data.author}`}{post.data.publish && ` on ${post.data.publish}`}
+            </p>
+            <div class="row">
+              <div class="col-sm-6">
+                <img src={`/images/articles/800x600/${post.data.id}.jpg`} class="img-fluid" alt={post.data.title} onerror="this.style.display='none'" />
+              </div>
+              <div class="col-sm-6">
+                {post.data.summary && <p>{post.data.summary}</p>}
+                <p class="text-center mt-5">
+                  <a class="button" href={`/blog/${post.data.textid}`} title={post.data.title}>Read all</a>
+                </p>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,30 @@
+{
+    "Fig01.jpg": {
+        "caption": {
+            "en": "Fig. 1 - Map of Afghanistan showing the sites mentioned in the text"
+        },
+        "sort": "1",
+        "href": ""
+    },
+    "Fig02.jpg": {
+        "caption": {
+            "en": "Fig. 2 - Tepe Narenj (2012): panoramic view of the site; in the background the lake Kol-e Hashmat Kan"
+        },
+        "sort": "2",
+        "href": ""
+    },
+    "Fig03.jpg": {
+        "caption": {
+            "en": "Fig. 3 - The Main Stūpa viewed from the west side"
+        },
+        "sort": "3",
+        "href": ""
+    },
+    "Fig04.jpg": {
+        "caption": {
+            "en": "Fig. 4 - View of the site from the west"
+        },
+        "sort": "4",
+        "href": ""
+    }
+}

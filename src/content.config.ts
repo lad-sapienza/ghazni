@@ -1,27 +1,22 @@
-/**
- * Content Collections Configuration
- *
- * Define your content collections here. Each collection needs a loader
- * (usually `glob` for local Markdown/MDX files) and a Zod schema.
- *
- * Fastest way to add one: `npm run add-collection`.
- *
- * Example — a `blog` collection, added to the `collections` export below:
- *
- * const blog = defineCollection({
- *   loader: glob({ pattern: '**\/*.{md,mdx}', base: './src/content/blog' }),
- *   schema: z.object({
- *     title: z.string(),
- *     description: z.string(),
- *     date: z.coerce.date(),
- *     draft: z.boolean().optional(),
- *   }),
- * });
- */
-
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'zod';
 
-// Export all collections
-export const collections = {};
+// Static article content, migrated from the original site's sqlite `articles`
+// table. `textid` is the original slug and also the site path the article is
+// served at (e.g. textid "ghazni-project" -> /ghazni-project) — kept as-is
+// to preserve the old site's URLs.
+const articles = defineCollection({
+  loader: glob({ pattern: '*.mdx', base: './src/content/articles' }),
+  schema: z.object({
+    id: z.number(),
+    textid: z.string(),
+    title: z.string(),
+    summary: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    author: z.string().optional(),
+    publish: z.string().optional(),
+  }),
+});
+
+export const collections = { articles };

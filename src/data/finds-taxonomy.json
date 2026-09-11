@@ -1,0 +1,1102 @@
+{
+    "finds": {
+        "islamic": {
+            "id": "islamic",
+            "label": "Islamic Ghazni",
+            "items": {
+                "alabaster": {
+                    "id": "alabaster",
+                    "label": "Alabaster",
+                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|main_material|=|Alabaster~>inv_no:asc"
+                },
+                "marble": {
+                    "id": "marble",
+                    "label": "Marble",
+                    "items": {
+                        "m_panels": {
+                            "id": "m_panels",
+                            "label": "Panels",
+                            "items": {
+                                "arched-panels": {
+                                    "id": "arched-panels",
+                                    "label": "Arched panels",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|typology|=|Arched panel||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-1": {
+                                    "id": "panel-type-1",
+                                    "label": "Panel with hexagons pattern (type 1)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 1)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-2": {
+                                    "id": "panel-type-2",
+                                    "label": "Panel with octagons pattern (type 2)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 2)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-3": {
+                                    "id": "panel-type-3",
+                                    "label": "Panel with octagons pattern (type 3)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 3)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-3a": {
+                                    "id": "panel-type-3a",
+                                    "label": "Panel with octagons pattern (type 3a)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 3a)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-4": {
+                                    "id": "panel-type-4",
+                                    "label": "Panel with octagons pattern (type 4)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 4)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-5": {
+                                    "id": "panel-type-5",
+                                    "label": "Panel with octagons pattern (type 5)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 5)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-6": {
+                                    "id": "panel-type-6",
+                                    "label": "Panel with octagons pattern (type 6)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 6)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-7": {
+                                    "id": "panel-type-7",
+                                    "label": "Panel with octagons pattern (type 7)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 7)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-8": {
+                                    "id": "panel-type-8",
+                                    "label": "Panel with squares pattern (type 8)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 8)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-9": {
+                                    "id": "panel-type-9",
+                                    "label": "Panel with whirls pattern (type 9)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 9)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-10": {
+                                    "id": "panel-type-10",
+                                    "label": "Panel with whirls pattern (type 10)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 10)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-11": {
+                                    "id": "panel-type-11",
+                                    "label": "Panel with whirls pattern (type 11)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 11)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-12": {
+                                    "id": "panel-type-12",
+                                    "label": "Panel with vegetal pattern (type 12)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 12)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-13": {
+                                    "id": "panel-type-13",
+                                    "label": "Panel with vegetal pattern (type 13)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 13)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-14": {
+                                    "id": "panel-type-14",
+                                    "label": "Panel with vegetal pattern (type 14)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 14)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-15": {
+                                    "id": "panel-type-15",
+                                    "label": "Panel with vegetal pattern (type 15)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 15)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-17": {
+                                    "id": "panel-type-17",
+                                    "label": "Panel with square Kufic (type 17)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 17)%||and|main_material|=|Marble~>inv_no:asc"
+                                },
+                                "panel-type-18": {
+                                    "id": "panel-type-18",
+                                    "label": "Panel with epigraphic and geometric motifs (type 18)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Panel||and|typology|like|%(type 18)%||and|main_material|=|Marble~>inv_no:asc"
+                                }
+                            }
+                        },
+                        "dado-panels": {
+                            "id": "dado-panels",
+                            "label": "Dado panels",
+                            "items": {
+                                "dado-interlaced-arches-1": {
+                                    "id": "dado-interlaced-arches-1",
+                                    "label": "Dado with interlaced arches (type 1)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|typology|=|Dado panel with interlaced arches (type 1)~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-2": {
+                                    "id": "dado-interlaced-arches-2",
+                                    "label": "Dado with interlaced arches (type 2)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 2)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-3": {
+                                    "id": "dado-interlaced-arches-3",
+                                    "label": "Dado with interlaced arches (type 3)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 3)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-5a": {
+                                    "id": "dado-interlaced-arches-5a",
+                                    "label": "Dado with interlaced arches (type 5a)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 5a)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-5b": {
+                                    "id": "dado-interlaced-arches-5b",
+                                    "label": "Dado with interlaced arches (type 5b)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 5b)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-5c": {
+                                    "id": "dado-interlaced-arches-5c",
+                                    "label": "Dado with interlaced arches (type 5c)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 5c)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-5d": {
+                                    "id": "dado-interlaced-arches-5d",
+                                    "label": "Dado with interlaced arches (type 5d)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 5d)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-6": {
+                                    "id": "dado-interlaced-arches-6",
+                                    "label": "Dado with interlaced arches (type 6)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 6)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-7": {
+                                    "id": "dado-interlaced-arches-7",
+                                    "label": "Dado with interlaced arches (type 7)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 7)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-7a": {
+                                    "id": "dado-interlaced-arches-7a",
+                                    "label": "Dado with interlaced arches (type 7a)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 7a)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-8a": {
+                                    "id": "dado-interlaced-arches-8a",
+                                    "label": "Dado with interlaced arches (type 8a)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 8a)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-8b": {
+                                    "id": "dado-interlaced-arches-8b",
+                                    "label": "Dado with interlaced arches (type 8b)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 8b)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-10": {
+                                    "id": "dado-interlaced-arches-10",
+                                    "label": "Dado with interlaced arches (type 10)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 10)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-11a": {
+                                    "id": "dado-interlaced-arches-11a",
+                                    "label": "Dado with interlaced arches (type 11a)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 11a)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-11b": {
+                                    "id": "dado-interlaced-arches-11b",
+                                    "label": "Dado with interlaced arches (type 11b)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 11b)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-11c": {
+                                    "id": "dado-interlaced-arches-11c",
+                                    "label": "Dado with interlaced arches (type 11c)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 11c)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-11d": {
+                                    "id": "dado-interlaced-arches-11d",
+                                    "label": "Dado with interlaced arches (type 11d)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 11d)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-12": {
+                                    "id": "dado-interlaced-arches-12",
+                                    "label": "Dado with interlaced arches (type 12)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 12)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-13": {
+                                    "id": "dado-interlaced-arches-13",
+                                    "label": "Dado with interlaced arches (type 13)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 13)%~>inv_no:asc"
+                                },
+                                "dado-persian-inscription-14": {
+                                    "id": "dado-persian-inscription-14",
+                                    "label": "Dado with Persian inscription (type 14)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 14)%~>inv_no:asc"
+                                },
+                                "dado-basmala-14a": {
+                                    "id": "dado-basmala-14a",
+                                    "label": "Dado with basmala (type 14a)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 14a)%~>inv_no:asc"
+                                },
+                                "dado-persian-inscription-14b": {
+                                    "id": "dado-persian-inscription-14b",
+                                    "label": "Dado with Persian inscription (type 14b)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 14b)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-15": {
+                                    "id": "dado-interlaced-arches-15",
+                                    "label": "Dado with interlaced arches (type 15)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 15)%~>inv_no:asc"
+                                },
+                                "dado-benedictory-inscription-16": {
+                                    "id": "dado-benedictory-inscription-16",
+                                    "label": "Dado with benedictory inscription (type 16)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 16)%~>inv_no:asc"
+                                },
+                                "dado-benedictory-inscription-17a": {
+                                    "id": "dado-benedictory-inscription-17a",
+                                    "label": "Dado with benedictory inscription (type 17a)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 17a)%~>inv_no:asc"
+                                },
+                                "dado-benedictory-inscription-17b": {
+                                    "id": "dado-benedictory-inscription-17b",
+                                    "label": "Dado with benedictory inscription (type 17b)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 17b)%~>inv_no:asc"
+                                },
+                                "dado-benedictory-inscription-18": {
+                                    "id": "dado-benedictory-inscription-18",
+                                    "label": "Dado with benedictory inscription (type 18)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 18)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-19a": {
+                                    "id": "dado-interlaced-arches-19a",
+                                    "label": "Dado with interlaced arches (type 19a)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 19a)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-19b": {
+                                    "id": "dado-interlaced-arches-19b",
+                                    "label": "Dado with interlaced arches (type 19b)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 19a)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-20": {
+                                    "id": "dado-interlaced-arches-20",
+                                    "label": "Dado with interlaced arches (type 20)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 20)%~>inv_no:asc"
+                                },
+                                "dado-zoomorphic-decoration-21": {
+                                    "id": "dado-zoomorphic-decoration-21",
+                                    "label": "Dado with zoomorphic decoration (type 21)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 21)%~>inv_no:asc"
+                                },
+                                "dado-zoomorphic-decoration-22": {
+                                    "id": "dado-zoomorphic-decoration-22",
+                                    "label": "Dado with zoomorphic decoration (type 22)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 22)%~>inv_no:asc"
+                                },
+                                "dado-zoomorphic-decoration-23": {
+                                    "id": "dado-zoomorphic-decoration-23",
+                                    "label": "Dado with zoomorphic decoration (type 23)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 23)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-24": {
+                                    "id": "dado-interlaced-arches-24",
+                                    "label": "Dado with interlaced arches (type 24)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 24)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-24b": {
+                                    "id": "dado-interlaced-arches-24b",
+                                    "label": "Dado with interlaced arches (type 24b)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 24b)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-25": {
+                                    "id": "dado-interlaced-arches-25",
+                                    "label": "Dado with interlaced arches (type 25)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 25)%~>inv_no:asc"
+                                },
+                                "dado-trilobated-arches-26": {
+                                    "id": "dado-trilobated-arches-26",
+                                    "label": "Dado with trilobated arches (type 26)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 26)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-27": {
+                                    "id": "dado-interlaced-arches-27",
+                                    "label": "Dado with interlaced arches (type 27)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 27)%~>inv_no:asc"
+                                },
+                                "dado-double-sequence-of-interlaced-arches-28a": {
+                                    "id": "dado-double-sequence-of-interlaced-arches-28a",
+                                    "label": "Dado with double sequence of interlaced arches (type 28a)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 28a)%~>inv_no:asc"
+                                },
+                                "dado-double-sequence-of-interlaced-arches-28b": {
+                                    "id": "dado-double-sequence-of-interlaced-arches-28b",
+                                    "label": "Dado with double sequence of interlaced arches (type 28b)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 28b)%~>inv_no:asc"
+                                },
+                                "dado-double-sequence-of-interlaced-arches-29": {
+                                    "id": "dado-double-sequence-of-interlaced-arches-29",
+                                    "label": "Dado with double sequence of interlaced arches (type 29)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 29)%~>inv_no:asc"
+                                },
+                                "dado-double-sequence-of-interlaced-arches-30": {
+                                    "id": "dado-double-sequence-of-interlaced-arches-30",
+                                    "label": "Dado with double sequence of interlaced arches (type 30)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 30)%~>inv_no:asc"
+                                },
+                                "dado-double-sequence-of-interlaced-arches-31": {
+                                    "id": "dado-double-sequence-of-interlaced-arches-31",
+                                    "label": "Dado with double sequence of interlaced arches (type 31)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 31)%~>inv_no:asc"
+                                },
+                                "dado-double-sequence-of-interlaced-arches-32": {
+                                    "id": "dado-double-sequence-of-interlaced-arches-32",
+                                    "label": "Dado with double sequence of interlaced arches (type 32)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 32)%~>inv_no:asc"
+                                },
+                                "dado-double-sequence-of-interlaced-arches-33": {
+                                    "id": "dado-double-sequence-of-interlaced-arches-33",
+                                    "label": "Dado with double sequence of interlaced arches (type 33)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 33)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-34a": {
+                                    "id": "dado-interlaced-arches-34a",
+                                    "label": "Dado with interlaced arches (type 34a)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 34a)%~>inv_no:asc"
+                                },
+                                "dado-interlaced-arches-34b": {
+                                    "id": "dado-interlaced-arches-34b",
+                                    "label": "Dado with interlaced arches (type 34b)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 34b)%~>inv_no:asc"
+                                },
+                                "dado-pointed-horseshoe-arches-35": {
+                                    "id": "dado-pointed-horseshoe-arches-35",
+                                    "label": "Dado with pointed horseshoe arches (type 35)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 35)%~>inv_no:asc"
+                                },
+                                "dado-pointed-horseshoe-arches-36": {
+                                    "id": "dado-pointed-horseshoe-arches-36",
+                                    "label": "Dado with pointed horseshoe arches (type 36)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 36)%~>inv_no:asc"
+                                },
+                                "dado-pointed-horseshoe-arches-37": {
+                                    "id": "dado-pointed-horseshoe-arches-37",
+                                    "label": "Dado with pointed horseshoe arches (type 37)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 37)%~>inv_no:asc"
+                                },
+                                "dado-pointed-horseshoe-arches-37b": {
+                                    "id": "dado-pointed-horseshoe-arches-37b",
+                                    "label": "Dado with pointed horseshoe arches (type 37b)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 37b)%~>inv_no:asc"
+                                },
+                                "dado-pointed-horseshoe-arches-38": {
+                                    "id": "dado-pointed-horseshoe-arches-38",
+                                    "label": "Dado with pointed horseshoe arches (type 38)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 38)%~>inv_no:asc"
+                                },
+                                "dado-antropomorphic-decoration-39": {
+                                    "id": "dado-antropomorphic-decoration-39",
+                                    "label": "Dado with antropomorphic decoration (type 39)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 39)%~>inv_no:asc"
+                                },
+                                "dado-pointed-horseshoe-arches-39b": {
+                                    "id": "dado-pointed-horseshoe-arches-39b",
+                                    "label": "Dado with pointed horseshoe arches (type 39b)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 39b)%~>inv_no:asc"
+                                },
+                                "dado-pointed-horseshoe-arches-40": {
+                                    "id": "dado-pointed-horseshoe-arches-40",
+                                    "label": "Dado with pointed horseshoe arches (type 40)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 40)%~>inv_no:asc"
+                                },
+                                "dado-zoomorphic-decoration-41": {
+                                    "id": "dado-zoomorphic-decoration-41",
+                                    "label": "Dado with zoomorphic decoration (type 41)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 41)%~>inv_no:asc"
+                                },
+                                "dado-zoomorphic-decoration-42": {
+                                    "id": "dado-zoomorphic-decoration-42",
+                                    "label": "Dado with zoomorphic decoration (type 42)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 42)%~>inv_no:asc"
+                                },
+                                "dado-zoomorphic-decoration-43": {
+                                    "id": "dado-zoomorphic-decoration-43",
+                                    "label": "Dado with zoomorphic decoration (type 43)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 43)%~>inv_no:asc"
+                                },
+                                "dado-zoomorphic-decoration-44": {
+                                    "id": "dado-zoomorphic-decoration-44",
+                                    "label": "Dado with zoomorphic decoration (type 44)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Dado panel||and|typology|like|%(type 44)%~>inv_no:asc"
+                                }
+                            }
+                        },
+                        "panels-niche-design": {
+                            "id": "panels-niche-design",
+                            "label": "Panels with niche design",
+                            "shortsql": "@finds~?archaeological_context|=|Islamic||and|typology|=|Panel with niche design||and|main_material|=|Marble~>inv_no:asc"
+                        },
+                        "frames": {
+                            "id": "frames",
+                            "label": "Frames",
+                            "shortsql": "@finds~?archaeological_context|=|Islamic||and|main_material|=|Marble||and|object|=|Frame~>inv_no:asc"
+                        },
+                        "screens": {
+                            "id": "screens",
+                            "label": "Screens",
+                            "items": {
+                                "screen-1": {
+                                    "id": "screen-1",
+                                    "label": "Screen (type 1)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Screen||and|typology|like|%(Type 1)%~>inv_no:asc"
+                                },
+                                "screen-3": {
+                                    "id": "screen-3",
+                                    "label": "Screen (type 3)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Screen||and|typology|like|%(Type 3)%~>inv_no:asc"
+                                },
+                                "screen-4": {
+                                    "id": "screen-4",
+                                    "label": "Screen (type 4)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Screen||and|typology|like|%(Type 4)%~>inv_no:asc"
+                                },
+                                "screen-5": {
+                                    "id": "screen-5",
+                                    "label": "Screen (type 5)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Screen||and|typology|like|%(Type 5)%~>inv_no:asc"
+                                },
+                                "screen-6": {
+                                    "id": "screen-6",
+                                    "label": "Screen (type 6)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Screen||and|typology|like|%(Type 6)%~>inv_no:asc"
+                                },
+                                "screen-7": {
+                                    "id": "screen-7",
+                                    "label": "Screen (type 7)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Screen||and|typology|like|%(Type 7)%~>inv_no:asc"
+                                },
+                                "screen-7a": {
+                                    "id": "screen-7a",
+                                    "label": "Screen (type 7a)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Screen||and|typology|like|%(Type 7a)%~>inv_no:asc"
+                                },
+                                "screen-8": {
+                                    "id": "screen-8",
+                                    "label": "Screen (type 8)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Screen||and|typology|like|%(Type 8)%~>inv_no:asc"
+                                },
+                                "screen-9": {
+                                    "id": "screen-9",
+                                    "label": "Screen (type 9)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Screen||and|typology|like|%(Type 9)%~>inv_no:asc"
+                                },
+                                "screen-10": {
+                                    "id": "screen-10",
+                                    "label": "Screen (type 10)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Screen||and|typology|like|%(Type 10)%~>inv_no:asc"
+                                }
+                            }
+                        },
+                        "arches": {
+                            "id": "arches",
+                            "label": "Arches",
+                            "shortsql": "@finds~?archaeological_context|=|Islamic||and|typology|=|Arch~>inv_no:asc"
+                        },
+                        "bases-of-columns": {
+                            "id": "bases-of-columns",
+                            "label": "Bases of columns",
+                            "items": {
+                                "bases-ghaznavid-palace": {
+                                    "id": "bases-ghaznavid-palace",
+                                    "label": "Base of columns (Ghaznavid palace)",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|typology|=|Base of column (Ghaznavid palace)~>inv_no:asc"
+                                },
+                                "other-bases": {
+                                    "id": "other-bases",
+                                    "label": "Other bases of columns",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|typology|=|Base of column~>inv_no:asc"
+                                }
+                            }
+                        },
+                        "merlons": {
+                            "id": "merlons",
+                            "label": "Merlons",
+                            "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Merlon~>inv_no:asc"
+                        },
+                        "water-system-elements": {
+                            "id": "water-system-elements",
+                            "label": "Water system elements",
+                            "items": {
+                                "basins": {
+                                    "id": "basins",
+                                    "label": "Basins",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Basin~>inv_no:asc"
+                                },
+                                "drains": {
+                                    "id": "drains",
+                                    "label": "Drains",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Drain~>inv_no:asc"
+                                },
+                                "well-curbs": {
+                                    "id": "well-curbs",
+                                    "label": "Well curbs",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Well curb~>inv_no:asc"
+                                },
+                                "tanks": {
+                                    "id": "tanks",
+                                    "label": "Tanks",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Tank~>inv_no:asc"
+                                }
+                            }
+                        },
+                        "more": {
+                            "id": "more",
+                            "label": "More",
+                            "items": {
+                                "slabs": {
+                                    "id": "slabs",
+                                    "label": "Slabs",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|main_material|=|Marble||and|object|=|Slab~>inv_no:asc"
+                                },
+                                "hinges": {
+                                    "id": "hinges",
+                                    "label": "Hinges \/ Hinge washers",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|class|=|Architectural functional element~>inv_no:asc"
+                                },
+                                "floor-slabs": {
+                                    "id": "floor-slabs",
+                                    "label": "Floor slabs",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Floor slab~>inv_no:asc"
+                                },
+                                "elements-of-column": {
+                                    "id": "elements-of-column",
+                                    "label": "Elements of column",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Element of column~>inv_no:asc"
+                                },
+                                "capitals": {
+                                    "id": "capitals",
+                                    "label": "Capitals",
+                                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|object|=|Small capital~>inv_no:asc"
+                                }
+                            }
+                        }
+                    }
+                },
+                "brickwork": {
+                    "id": "brickwork",
+                    "label": "Brickwork",
+                    "items": {
+                        "bw_panels-and-frames": {
+                            "id": "bw_panels-and-frames",
+                            "label": "Panels and frames",
+                            "items": {
+                                "panels-with-vegetal-decoration": {
+                                    "id": "panels-with-vegetal-decoration",
+                                    "label": "Panels with vegetal decoration",
+                                    "shortsql": "@finds~?main_material|=|Brickwork||and|category|=|Panels and frames||and|typology|=|Vegetal decoration~>inv_no:asc"
+                                },
+                                "panels-with-deep-decoration": {
+                                    "id": "panels-with-deep-decoration",
+                                    "label": "Panels with deep-carved decoration",
+                                    "shortsql": "@finds~?main_material|=|Brickwork||and|category|=|Panels and frames||and|typology|=|Deep-carved decoration~>inv_no:asc"
+                                },
+                                "panels-with-epigraphic-and-vegetal-decoration": {
+                                    "id": "panels-with-epigraphic-and-vegetal-decoration",
+                                    "label": "Panels with epigraphic and vegetal decoration",
+                                    "shortsql": "@finds~?main_material|=|Brickwork||and|category|=|Panels and frames||and|typology|=|Epigraphic and vegetal decoration~>inv_no:asc"
+                                },
+                                "panels-with-sequence-pointed-arches": {
+                                    "id": "panels-with-sequence-pointed-arches",
+                                    "label": "Panels with sequence of pointed arches",
+                                    "shortsql": "@finds~?main_material|=|Brickwork||and|category|=|Panels and frames||and|typology|=|Sequence of pointed arches~>inv_no:asc"
+                                },
+                                "panels-with-mosaic-like-composition": {
+                                    "id": "panels-with-mosaic-like-composition",
+                                    "label": "Panels with mosaic-like composition",
+                                    "shortsql": "@finds~?main_material|=|Brickwork||and|category|=|Panels and frames||and|typology|=|Mosaic-like~>inv_no:asc"
+                                },
+                                "panels-with-roundels-of-pierced-pearls": {
+                                    "id": "panels-with-roundels-of-pierced-pearls",
+                                    "label": "Panels with roundels of pierced pearls",
+                                    "shortsql": "@finds~?main_material|=|Brickwork||and|category|=|Panels and frames||and|typology|=|Roundels of pierced pearls~>inv_no:asc"
+                                },
+                                "panels-with-flat-lateral-pillar": {
+                                    "id": "panels-with-flat-lateral-pillar",
+                                    "label": "Panels with flat lateral pillar",
+                                    "shortsql": "@finds~?main_material|=|Brickwork||and|category|=|Panels and frames||and|typology|=|Flat lateral pillar~>inv_no:asc"
+                                },
+                                "panels-with-brick-inserts": {
+                                    "id": "panels-with-brick-inserts",
+                                    "label": "Panels with brick inserts",
+                                    "shortsql": "@finds~?main_material|=|Brickwork||and|category|=|Panels and frames||and|typology|=|Brick inserts~>inv_no:asc"
+                                },
+                                "brickwork-frames": {
+                                    "id": "brickwork-frames",
+                                    "label": "Frames",
+                                    "shortsql": "@finds~?main_material|=|Brickwork||and|category|=|Panels and frames||and|object|=|Frame~>inv_no:asc"
+                                }
+                            }
+                        },
+                        "epigraphic-panels": {
+                            "id": "epigraphic-panels",
+                            "label": "Epigraphic panels and frames",
+                            "items": {
+                                "kufic": {
+                                    "id": "kufic",
+                                    "label": "Kufic",
+                                    "shortsql": "@finds~?(|object|=|Epigraphic frame||or|object|=|Epigraphic panel|)||and|typology|=|(Kufic)||and|main_material|=|Brickwork~>inv_no:asc"
+                                },
+                                "cursive": {
+                                    "id": "cursive",
+                                    "label": "Cursive",
+                                    "shortsql": "@finds~?(|object|=|Epigraphic frame||or|object|=|Epigraphic panel|)||and|typology|=|(Cursive)||and|main_material|=|Brickwork~>inv_no:asc"
+                                }
+                            }
+                        },
+                        "bw_pilasters": {
+                            "id": "bw_pilasters",
+                            "label": "Pilasters",
+                            "items": {
+                                "type-1": {
+                                    "id": "type-1",
+                                    "label": "Type 1",
+                                    "shortsql": "@finds~?object|=|Pilaster||and|typology|=|(type 1)"
+                                },
+                                "type-2": {
+                                    "id": "type-2",
+                                    "label": "Type 2",
+                                    "shortsql": "@finds~?object|=|Pilaster||and|typology|=|(type 2)"
+                                },
+                                "type-3": {
+                                    "id": "type-3",
+                                    "label": "Type 3",
+                                    "shortsql": "@finds~?object|=|Pilaster||and|typology|=|(type 3)"
+                                },
+                                "type-4": {
+                                    "id": "type-4",
+                                    "label": "Type 4",
+                                    "shortsql": "@finds~?object|=|Pilaster||and|typology|=|(type 4)"
+                                },
+                                "type-5": {
+                                    "id": "type-5",
+                                    "label": "Type 5",
+                                    "shortsql": "@finds~?object|=|Pilaster||and|typology|=|(type 5)"
+                                },
+                                "type-6": {
+                                    "id": "type-6",
+                                    "label": "Type 6",
+                                    "shortsql": "@finds~?object|=|Pilaster||and|typology|=|(type 6)"
+                                },
+                                "unidentified-pilaster-types": {
+                                    "id": "unidentified-pilaster-types",
+                                    "label": "Unidentified types",
+                                    "shortsql": "@finds~?object|=|Pilaster||and|typology|=|(unidentified types)"
+                                }
+                            }
+                        },
+                        "bw_columns": {
+                            "id": "bw_columns",
+                            "label": "Pillars and columns",
+                            "items": {
+                                "drums": {
+                                    "id": "drums",
+                                    "label": "Pillar and column drums",
+                                    "shortsql": "@finds~?object|=|Column drum||or|object|=|Pillar drum||or|object|=|Pillar frame"
+                                },
+                                "small-columns": {
+                                    "id": "small-columns",
+                                    "label": "Small columns",
+                                    "shortsql": "@finds~?object|=|Small column shaft||and|main_material|=|Brickwork||and|archaeological_context|=|Islamic"
+                                },
+                                "composite-pillars": {
+                                    "id": "composite-pillars",
+                                    "label": "Composite pillars",
+                                    "shortsql": "@finds~?object|=|Composite pillar drum||and|main_material|=|Brickwork||and|archaeological_context|=|Islamic"
+                                },
+                                "bases-and-capitals": {
+                                    "id": "bases-and-capitals",
+                                    "label": "Bases and capitals",
+                                    "shortsql": "@finds~?object|=|Base or capital||and|main_material|=|Brickwork||and|archaeological_context|=|Islamic"
+                                },
+                                "cubic-and-prismatic": {
+                                    "id": "cubic-and-prismatic",
+                                    "label": "Cubic and prismatic elements",
+                                    "shortsql": "@finds~?object|=|Cubic element||or|object|=|Prismatic element"
+                                }
+                            }
+                        },
+                        "bw_friezes": {
+                            "id": "bw_friezes",
+                            "label": "Friezes",
+                            "items": {
+                                "knotted-pseudo-epigraphic": {
+                                    "id": "knotted-pseudo-epigraphic",
+                                    "label": "Frieze with knotted pseudo-epigraphic decoration",
+                                    "shortsql": "@finds~?object|=|Frieze||and|main_material|=|Brickwork||and|typology|=|Knotted pseudo-epigraphic~>inv_no:asc"
+                                },
+                                "unidentified-freeze-types": {
+                                    "id": "unidentified-freeze-types",
+                                    "label": "Unidentified types",
+                                    "shortsql": "@finds~?object|=|Frieze||and|main_material|=|Brickwork||and|typology|=|(unidentified types)~>inv_no:asc"
+                                }
+                            }
+                        },
+                        "inserts": {
+                            "id": "inserts",
+                            "label": "Inserts",
+                            "shortsql": "@finds~?object|=|Insert||and|main_material|=|Brickwork||and|archaeological_context|=|Islamic~>inv_no:asc"
+                        },
+                        "bw-tiles": {
+                            "id": "bw-tiles",
+                            "label": "Tiles",
+                            "shortsql": "@finds~?object|=|Tile||and|main_material|=|Brickwork||and|archaeological_context|=|Islamic~>inv_no:asc"
+                        },
+                        "brickwork-half-shells": {
+                            "id": "brickwork-half-shells",
+                            "label": "Half-shells",
+                            "shortsql": "@finds~?main_material|=|Brickwork||and|object|=|Half-shell~>inv_no:asc"
+                        },
+                        "brickwork-lunettes": {
+                            "id": "brickwork-lunettes",
+                            "label": "Lunettes",
+                            "shortsql": "@finds~?main_material|=|Brickwork||and|object|=|Lunette~>inv_no:asc"
+                        }
+                    }
+                },
+                "stucco": {
+                    "id": "stucco",
+                    "label": "Stucco",
+                    "items": {
+                        "s_panels-and-frames": {
+                            "id": "s_panels-and-frames",
+                            "label": "Panels and frames",
+                            "items": {
+                                "stucco-frames": {
+                                    "id": "stucco-frames",
+                                    "label": "Frames",
+                                    "shortsql": "@finds~?main_material|=|Stucco||and|object|=|Frame~>inv_no:asc"
+                                },
+                                "roundels-pierced-pearls": {
+                                    "id": "roundels-pierced-pearls",
+                                    "label": "Panels with roundels of pierced pearls",
+                                    "shortsql": "@finds~?main_material|=|Stucco||and|typology|=|Roundels of pierced pearls~>inv_no:asc"
+                                },
+                                "vegetal-decoration": {
+                                    "id": "vegetal-decoration",
+                                    "label": "Panels with vegetal decoration",
+                                    "shortsql": "@finds~?main_material|=|Stucco||and|typology|=|Vegetal decoration~>inv_no:asc"
+                                },
+                                "epigraphic-and-vegetal-decoration": {
+                                    "id": "epigraphic-and-vegetal-decoration",
+                                    "label": "Panels with epigraphic and vegetal decoration",
+                                    "shortsql": "@finds~?main_material|=|Stucco||and|typology|=|Epigraphic and vegetal decoration~>inv_no:asc"
+                                }
+                            }
+                        },
+                        "stucco-lunettes": {
+                            "id": "stucco-lunettes",
+                            "label": "Lunettes",
+                            "shortsql": "@finds~?main_material|=|Stucco||and|object|=|Lunette~>inv_no:asc"
+                        },
+                        "stucco-half-shells": {
+                            "id": "stucco-half-shells",
+                            "label": "Half-shells",
+                            "shortsql": "@finds~?main_material|=|Stucco||and|object|=|Half-shell~>inv_no:asc"
+                        },
+                        "epigraphic-frames": {
+                            "id": "epigraphic-frames",
+                            "label": "Epigraphic frames",
+                            "shortsql": "@finds~?main_material|=|Stucco||and|category|=|Epigraphic panels and frames~>inv_no:asc"
+                        },
+                        "pilasters": {
+                            "id": "pilasters",
+                            "label": "Pilasters",
+                            "shortsql": "@finds~?main_material|=|Stucco||and|category|=|Pilasters~>inv_no:asc"
+                        },
+                        "column-capitals": {
+                            "id": "column-capitals",
+                            "label": "Column capitals",
+                            "shortsql": "@finds~?main_material|=|Stucco||and|object|=|Capital~>inv_no:asc"
+                        },
+                        "friezes": {
+                            "id": "friezes",
+                            "label": "Friezes",
+                            "items": {
+                                "eight-shaped-motif": {
+                                    "id": "eight-shaped-motif",
+                                    "label": "Friezes with eight-shaped motif",
+                                    "shortsql": "@finds~?main_material|=|Stucco||and|typology|=|Eight-shaped motif~>inv_no:asc"
+                                },
+                                "specular-vegetal-motif": {
+                                    "id": "specular-vegetal-motif",
+                                    "label": "Friezes with specular vegetal motif",
+                                    "shortsql": "@finds~?main_material|=|Stucco||and|typology|=|Specular vegetal motif~>inv_no:asc"
+                                },
+                                "fleur-de-lis": {
+                                    "id": "fleur-de-lis",
+                                    "label": "Friezes with fleur-de-lis",
+                                    "shortsql": "@finds~?main_material|=|Stucco||and|typology|=|Fleur-de-lis~>inv_no:asc"
+                                }
+                            }
+                        },
+                        "window-grids": {
+                            "id": "window-grids",
+                            "label": "Window grids",
+                            "shortsql": "@finds~?main_material|=|Stucco||and|object|=|Window grid~>inv_no:asc"
+                        },
+                        "s_tiles": {
+                            "id": "s_tiles",
+                            "label": "Tiles",
+                            "shortsql": "@finds~?main_material|=|Stucco||and|object|=|Tile~>inv_no:asc"
+                        }
+                    }
+                },
+                "brickwork-and-stucco": {
+                    "id": "brickwork-and-stucco",
+                    "label": "Brickwork and stucco",
+                    "items": {
+                        "bws_panels": {
+                            "id": "bws_panels",
+                            "label": "Brick panels with stucco tiles",
+                            "items": {
+                                "type-1": {
+                                    "id": "type-1",
+                                    "label": "Type 1",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 1)~>inv_no:asc"
+                                },
+                                "type-2": {
+                                    "id": "type-2",
+                                    "label": "Type 2",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 2)~>inv_no:asc"
+                                },
+                                "type-3": {
+                                    "id": "type-3",
+                                    "label": "Type 3",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 3)~>inv_no:asc"
+                                },
+                                "type-4": {
+                                    "id": "type-4",
+                                    "label": "Type 4",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 4)~>inv_no:asc"
+                                },
+                                "type-5": {
+                                    "id": "type-5",
+                                    "label": "Type 5",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 5)~>inv_no:asc"
+                                },
+                                "type-6": {
+                                    "id": "type-6",
+                                    "label": "Type 6",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 6)~>inv_no:asc"
+                                },
+                                "type-7": {
+                                    "id": "type-7",
+                                    "label": "Type 7",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 7)~>inv_no:asc"
+                                },
+                                "type-8": {
+                                    "id": "type-8",
+                                    "label": "Type 8",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 8)~>inv_no:asc"
+                                },
+                                "type-9": {
+                                    "id": "type-9",
+                                    "label": "Type 9",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 9)~>inv_no:asc"
+                                },
+                                "type-10": {
+                                    "id": "type-10",
+                                    "label": "Type 10",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 10)~>inv_no:asc"
+                                },
+                                "type-11": {
+                                    "id": "type-11",
+                                    "label": "Type 11",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 11)~>inv_no:asc"
+                                },
+                                "type-12": {
+                                    "id": "type-12",
+                                    "label": "Type 12",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 12)~>inv_no:asc"
+                                },
+                                "type-13": {
+                                    "id": "type-13",
+                                    "label": "Type 13",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 13)~>inv_no:asc"
+                                },
+                                "type-14": {
+                                    "id": "type-14",
+                                    "label": "Type 14",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 14)~>inv_no:asc"
+                                },
+                                "type-15": {
+                                    "id": "type-15",
+                                    "label": "Type 15",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 15)~>inv_no:asc"
+                                },
+                                "type-16": {
+                                    "id": "type-16",
+                                    "label": "Type 16",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 16)~>inv_no:asc"
+                                },
+                                "type-17": {
+                                    "id": "type-17",
+                                    "label": "Type 17",
+                                    "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Brick panels with stucco tiles||and|typology|=|(type 17)~>inv_no:asc"
+                                }
+                            }
+                        },
+                        "brick-tiles": {
+                            "id": "brick-tiles",
+                            "label": "Brick tiles",
+                            "shortsql": "@finds~?main_material|=|Brickwork||and|category|=|Tiles~>inv_no:asc"
+                        },
+                        "stucco-tiles": {
+                            "id": "stucco-tiles",
+                            "label": "Stucco tiles",
+                            "shortsql": "@finds~?main_material|=|Stucco||and|category|=|Tiles~>inv_no:asc"
+                        },
+                        "brick-columns-stucco-tiles": {
+                            "id": "brick-columns-stucco-tiles",
+                            "label": "Brick columns with stucco tiles",
+                            "shortsql": "@finds~?main_material|=|Brickwork and stucco||and|category|=|Columns~>inv_no:asc"
+                        }
+                    }
+                },
+                "glazed-ceramic-tiles": {
+                    "id": "glazed-ceramic-tiles",
+                    "label": "Glazed ceramic tiles",
+                    "items": {
+                        "moulded-relief-decorated": {
+                            "id": "moulded-relief-decorated",
+                            "label": "Moulded relief decorated tiles",
+                            "shortsql": "@finds~?category|=|Glazed ceramic tiles||and|object|=|Moulded relief decorated tile~>inv_no:asc"
+                        },
+                        "plain-decorated": {
+                            "id": "plain-decorated",
+                            "label": "Plain tiles",
+                            "shortsql": "@finds~?category|=|Glazed ceramic tiles||and|object|=|Plain tile~>inv_no:asc"
+                        }
+                    }
+                },
+                "coins": {
+                    "id": "coins",
+                    "label": "Coins",
+                    "items": {
+                        "islamic-coins": {
+                            "id": "islamic-coins",
+                            "label": "Islamic coins",
+                            "shortsql": "MSG: This session will be available soon",
+                            "_shortsql": "@finds~?class|=|Coins||and|category|=|Islamic coins~>inv_no:asc"
+                        },
+                        "non-islamic-coins": {
+                            "id": "non-islamic-coins",
+                            "label": "Non-Islamic coins",
+                            "shortsql": "MSG: This session will be available soon",
+                            "_shortsql": "@finds~?class|=|Coins||and|category|=|Non-Islamic coins~>inv_no:asc"
+                        },
+                        "pre-islamic-coins": {
+                            "id": "pre-islamic-coins",
+                            "label": "Pre-Islamic coins",
+                            "shortsql": "MSG: This session will be available soon",
+                            "_shortsql": "@finds~?class|=|Coins||and|category|=|Pre-Islamic coins~>inv_no:asc"
+                        },
+                        "coins-unreadable": {
+                            "id": "coins-unreadable",
+                            "label": "Unreadable coins",
+                            "shortsql": "MSG: This session will be available soon",
+                            "_shortsql": "@finds~?class|=|Coins||and|category|=|Unreadable coins~>inv_no:asc"
+                        }
+                    }
+                },
+                "lustrewares": {
+                    "id": "lustrewares",
+                    "label": "Lustrewares",
+                    "shortsql": "@finds~?archaeological_context|=|Islamic||and|category|=|Lustreware~>inv_no:asc"
+                },
+                "tombs": {
+                    "id": "tombs",
+                    "label": "Tombs",
+                    "items": {
+                        "tombs-10-13-c": {
+                            "id": "tombs-10-13-c",
+                            "label": "Tombs (10th - 13th c.)",
+                            "shortsql": "@finds~?category|=|Tombs||and|typology|=|Tomb (10th-13th c.)~>inv_no:asc"
+                        },
+                        "tombs-14-18-c": {
+                            "id": "tombs-14-18-c",
+                            "label": "Tombs (14th - 18th c.)",
+                            "shortsql": "@finds~?category|=|Tombs||and|typology|=|Tomb (14th-18th c.)~>inv_no:asc"
+                        }
+                    }
+                }
+            }
+        },
+        "buddhist": {
+            "id": "buddhist",
+            "label": "Buddhist",
+            "items": {
+                "architectural-elements": {
+                    "id": "architectural-elements",
+                    "label": "Architectural elements \/ Miniatures",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%Architectural element%~>inv_no:asc"
+                },
+                "attributes": {
+                    "id": "attributes",
+                    "label": "Attributes",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%Attribute%~>inv_no:asc"
+                },
+                "body-ornaments": {
+                    "id": "body-ornaments",
+                    "label": "Body ornaments",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%Body ornament%~>inv_no:asc"
+                },
+                "buddhist-coins": {
+                    "id": "buddhist-coins",
+                    "label": "Coins",
+                    "shortsql": "MSG: This session will be available soon",
+                    "_shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%Coin%~>inv_no:asc"
+                },
+                "decorative-elments": {
+                    "id": "decorative-elments",
+                    "label": "Decorative elments \/ Miscellanea",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%miscellanea%~>inv_no:asc"
+                },
+                "decorative-plaque": {
+                    "id": "decorative-plaque",
+                    "label": "Decorative plaque",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%plaque%~>inv_no:asc"
+                },
+                "figurines": {
+                    "id": "figurines",
+                    "label": "Figurines",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%Figurine%~>inv_no:asc"
+                },
+                "cornices": {
+                    "id": "cornices",
+                    "label": "Cornices",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%Cornice%~>inv_no:asc"
+                },
+                "manuscripts": {
+                    "id": "manuscripts",
+                    "label": "Manuscripts",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%Manuscript%~>inv_no:asc"
+                },
+                "moulds": {
+                    "id": "moulds",
+                    "label": "Moulds",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%Mould%~>inv_no:asc"
+                },
+                "pottery": {
+                    "id": "pottery",
+                    "label": "Pottery",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%Pottery%~>inv_no:asc"
+                },
+                "seals": {
+                    "id": "seals",
+                    "label": "Seals",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%Seal%~>inv_no:asc"
+                },
+                "statues": {
+                    "id": "statues",
+                    "label": "Statues",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%Statue%~>inv_no:asc"
+                },
+                "wall-statues": {
+                    "id": "wall-statues",
+                    "label": "Wall statues",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%Wall statue%~>inv_no:asc"
+                },
+                "wall-paintings": {
+                    "id": "wall-paintings",
+                    "label": "Wall paintings",
+                    "shortsql": "@finds~?archaeological_context|=|Buddhist||and|object|like|%Wall painting%~>inv_no:asc"
+                }
+            }
+        }
+    }
+}

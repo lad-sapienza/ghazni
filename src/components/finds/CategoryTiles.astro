@@ -1,0 +1,27 @@
+---
+import type { TaxonomyNode } from '../../utils/taxonomy';
+
+interface Props {
+  node: TaxonomyNode;
+  /** e.g. "/islamic/finds/brickwork" — the current page's own path. */
+  basePath: string;
+  /** Path segments used to resolve the thumbnail image, e.g. "islamic/brickwork" (no leading/trailing slash, no "finds"). */
+  imagePath: string;
+}
+
+const { node, basePath, imagePath } = Astro.props;
+const items = Object.entries(node.items ?? {});
+---
+
+<div class="row">
+  {items.map(([id, child]) => (
+    <div class="col-6 col-sm-4 col-md-3 col-xl-2">
+      <figure class="figure">
+        <a href={`${basePath}/${id}`} title={child.label}>
+          <img src={`/images/finds/${imagePath}/${id}.jpg`} class="figure-img img-fluid rounded" alt={child.label} />
+          <figcaption class="figure-caption text-center">{child.label}</figcaption>
+        </a>
+      </figure>
+    </div>
+  ))}
+</div>

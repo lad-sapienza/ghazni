@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Search">
+  <div class="container mb-5">
+    <h2>Search for <code id="search-term"></code></h2>
+    <ul id="search-results" class="list-unstyled"></ul>
+    <p id="search-empty" hidden>No record found!</p>
+  </div>
+</BaseLayout>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const q = (params.get('q') ?? '').trim().toLowerCase();
+  document.getElementById('search-term')!.textContent = q;
+
+  if (q) {
+    fetch('/data/finds-index.json')
+      .then((r) => r.json())
+      .then((index: { invNo: string; url: string }[]) => {
+        const matches = index.filter((r) => r.invNo.toLowerCase().includes(q));
+        const list = document.getElementById('search-results')!;
+        const empty = document.getElementById('search-empty')!;
+        if (matches.length === 0) {
+          empty.hidden = false;
+          return;
+        }
+        for (const m of matches) {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = m.url;
+          a.textContent = m.invNo;
+          li.appendChild(a);
+          list.appendChild(li);
+        }
+      });
+  }
+</script>

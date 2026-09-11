@@ -1,0 +1,37 @@
+---
+// Mirrors sites/default/modules/sketchfab/sketchfab.php
+interface Props {
+  modelId: string;
+  title?: string;
+  width?: number;
+  height?: number;
+}
+const { modelId, title = 'A 3D model', width = 840, height = 640 } = Astro.props;
+const qs = new URLSearchParams({
+  autostart: '1',
+  ui_controls: '1',
+  ui_infos: '1',
+  ui_inspector: '1',
+  ui_stop: '1',
+  ui_watermark: '1',
+  ui_watermark_link: '1',
+});
+const src = `https://sketchfab.com/models/${modelId}/embed?${qs.toString()}`;
+---
+
+<div class="sketchfab-embed-wrapper">
+  <iframe
+    title={title}
+    width={width}
+    height={height}
+    src={src}
+    frameborder="0"
+    allow="autoplay; fullscreen; vr"
+    allowfullscreen
+  ></iframe>
+  <p class="sketchfab-caption">
+    <a href={`https://sketchfab.com/3d-models/${modelId}?utm_medium=embed&utm_source=website&utm_campaign=share-popup`} target="_blank" rel="noreferrer">
+      {title}<span class="open-on-sketchfab"> [Open on Sketchfab.com]</span>
+    </a>
+  </p>
+</div>

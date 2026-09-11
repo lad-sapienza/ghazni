@@ -1,0 +1,56 @@
+---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import type { Domain } from '../utils/menus';
+
+interface Props {
+  entry: any;
+  Content: any;
+  /** Overrides tag-based domain detection (used when the URL itself is domain-prefixed). */
+  domain?: Domain;
+}
+
+const { entry, Content, domain: domainOverride } = Astro.props;
+
+const domain: Domain =
+  domainOverride ??
+  (entry.data.tags.includes('islamic') ? 'islamic' : entry.data.tags.includes('buddhist') ? 'buddhist' : undefined);
+
+// Mirrors _regular_article.twig: category-intro articles (tagged "finds")
+// don't get a duplicate title banner — the taxonomy page already shows one.
+const showTitleBanner = !entry.data.tags.includes('finds');
+
+const hasHero =
+  !entry.data.tags.includes('3d') &&
+  existsSync(join(process.cwd(), `public/images/articles/400x300/${entry.data.id}.jpg`));
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.summary} domain={domain}>
+  {showTitleBanner && (
+    <div class="submenu">
+      <div class="container">
+        <h1>{entry.data.title}</h1>
+      </div>
+    </div>
+  )}
+
+  <div class="content">
+    <div class="container">
+      <div class="regular-article">
+        {hasHero && (
+          <img
+            class="img-thumbnail article-image img-fluid"
+            src={`/images/articles/400x300/${entry.data.id}.jpg`}
+            alt={entry.data.title}
+            title={entry.data.title}
+            style="float: left; margin: 0 10px 10px 0; max-width: 200px;"
+          />
+        )}
+        <div class="article-body mb-5">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

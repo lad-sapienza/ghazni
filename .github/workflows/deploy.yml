@@ -33,6 +33,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          BDUS_API_KEY: ${{ secrets.BDUS_API_KEY }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

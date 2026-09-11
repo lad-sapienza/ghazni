@@ -1,0 +1,41 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticlePage from '../../components/ArticlePage.astro';
+
+export async function getStaticPaths() {
+  // A routing quirk of the original PHP site (a redundant, always-true
+  // condition in its top-level template) meant that some 2-segment URLs
+  // under /islamic or /buddhist whose second segment ISN'T "finds" were
+  // resolved as plain articles (by that last segment) rather than 404ing —
+  // and these specific ones are linked from real menus, so they're real,
+  // stable URLs to preserve. Listed explicitly rather than derived, since
+  // this is a small, closed, already-verified set (see migration notes) —
+  // deriving it generically risked generating routes nobody ever linked to.
+  // (Declared inside getStaticPaths, not at module scope — Astro runs this
+  // function in an isolated extraction that doesn't see module-scope
+  // consts declared outside it.)
+  const DOMAIN_ARTICLE_PATHS: { domain: 'islamic' | 'buddhist'; textid: string }[] = [
+    { domain: 'islamic', textid: 'sites_buildings' },
+    { domain: 'islamic', textid: 'ghaznavid-palace' },
+    { domain: 'islamic', textid: 'house-of-lustre-wares' },
+    { domain: 'islamic', textid: 'funerary-complexes' },
+    { domain: 'islamic', textid: 'i_gallery' },
+    { domain: 'buddhist', textid: 'the-buddhist-site-of-tapa-sardar' },
+    { domain: 'buddhist', textid: 'b_gallery' },
+  ];
+
+  const articles = await getCollection('articles');
+  const byTextid = new Map(articles.map((a) => [a.data.textid, a]));
+  return DOMAIN_ARTICLE_PATHS.map(({ domain, textid }) => ({
+    params: { domain, article: textid },
+    props: { entry: byTextid.get(textid) },
+  }));
+}
+
+const { entry } = Astro.props;
+const { domain } = Astro.params;
+if (!entry) throw new Error(`DOMAIN_ARTICLE_PATHS references a textid with no matching article`);
+const { Content } = await render(entry);
+---
+
+<ArticlePage entry={entry} Content={Content} domain={domain as 'islamic' | 'buddhist'} />

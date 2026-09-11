@@ -1,0 +1,53 @@
+---
+import { bdusQueryFull, bdusFullByFilter } from '../../../../utils/bdus';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../../components/finds/Breadcrumbs.astro';
+import RecordDetail from '../../../../components/finds/RecordDetail.astro';
+import FindsGrid from '../../../../components/finds/FindsGrid.astro';
+import { findUrl } from '../../../../utils/recordIndex';
+
+export async function getStaticPaths() {
+  const records = await bdusQueryFull('@funcomplex~>invno');
+  return records.map((record) => ({
+    params: { invno: record.core?.invno?.val },
+    props: { record },
+  }));
+}
+
+const { record } = Astro.props;
+
+// Mirrors record.php block 12: two linked-finds groups, split by class
+// "Funerary" vs everything else.
+let funeraryFinds: any[] = [];
+let otherFinds: any[] = [];
+const linksMeta = record.links?.finds;
+if (linksMeta?.tot > 0) {
+  const allLinked = await bdusFullByFilter('finds', linksMeta.filter);
+  funeraryFinds = allLinked.filter((r) => r.core?.class?.val === 'Funerary');
+  otherFinds = allLinked.filter((r) => r.core?.class?.val !== 'Funerary');
+}
+
+const hrefBase = '/islamic/funerary-complexes';
+---
+
+<BaseLayout title={record.core?.name?.val} domain="islamic">
+  <Breadcrumbs domain="islamic" parts={['funerary-complexes', 'record', record.core?.invno?.val]} />
+  <div class="container mb-5">
+    <RecordDetail record={record}>
+      {(funeraryFinds.length > 0 || otherFinds.length > 0) && (
+        <Fragment slot="linkedFinds">
+          <div class="row">
+            <div class="col">
+              <h4 class="text-white">Finds related to the tomb</h4>
+              <FindsGrid records={funeraryFinds} hrefFor={(invNo) => findUrl(invNo) ?? `${hrefBase}/record/${record.core?.invno?.val}`} />
+            </div>
+            <div class="col">
+              <h4 class="text-white">Finds re-employed in the tomb</h4>
+              <FindsGrid records={otherFinds} hrefFor={(invNo) => findUrl(invNo) ?? `${hrefBase}/record/${record.core?.invno?.val}`} />
+            </div>
+          </div>
+        </Fragment>
+      )}
+    </RecordDetail>
+  </div>
+</BaseLayout>

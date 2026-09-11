@@ -1,0 +1,46 @@
+---
+import { flattenDomain } from '../../../utils/taxonomy';
+import { bdusQueryFull } from '../../../utils/bdus';
+import CategoryPage from '../../../components/finds/CategoryPage.astro';
+import RecordDetail from '../../../components/finds/RecordDetail.astro';
+import Breadcrumbs from '../../../components/finds/Breadcrumbs.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const domains = ['islamic', 'buddhist'] as const;
+  const paths: any[] = [];
+
+  for (const domain of domains) {
+    for (const { parts, node } of flattenDomain(domain)) {
+      paths.push({ params: { domain, path: parts.join('/') }, props: { type: 'category', domain, parts, node } });
+
+      if (!node.items && node.shortsql && !node.shortsql.startsWith('MSG:')) {
+        const records = await bdusQueryFull(node.shortsql);
+        for (const record of records) {
+          const invNo = record.core?.inv_no?.val;
+          if (!invNo) continue;
+          paths.push({
+            params: { domain, path: [...parts, 'record', invNo].join('/') },
+            props: { type: 'record', domain, parts, record },
+          });
+        }
+      }
+    }
+  }
+
+  return paths;
+}
+
+const { type, domain, parts, node, record } = Astro.props as any;
+---
+
+{type === 'category' ? (
+  <CategoryPage domain={domain} parts={parts} node={node} />
+) : (
+  <BaseLayout title={`Inv. no. ${record.core?.inv_no?.val}`} domain={domain}>
+    <Breadcrumbs domain={domain} parts={['finds', ...parts, 'record', record.core?.inv_no?.val]} />
+    <div class="container mb-5">
+      <RecordDetail record={record} />
+    </div>
+  </BaseLayout>
+)}

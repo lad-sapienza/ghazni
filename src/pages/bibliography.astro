@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BiblioList from '../components/finds/BiblioList.astro';
+import { bdusQueryFull } from '../utils/bdus';
+
+const records = await bdusQueryFull('@bibliography~>author:asc,year:asc~-1000:0');
+---
+
+<BaseLayout title="Bibliography">
+  <div class="submenu">
+    <div class="container"><h1>Bibliography</h1></div>
+  </div>
+  <div class="container my-5">
+    <p>The bibliography includes all publications related to the project "Buddhist and Islamic Archaeological Data from Ghazni, Afghanistan", as well as publications related to the archaeological research in Ghazni and its materials.</p>
+    <BiblioList records={records} />
+  </div>
+</BaseLayout>

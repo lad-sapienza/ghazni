@@ -40,7 +40,7 @@ const currentPath = Astro.url.pathname;
     const input = document.getElementById('input_search_db') as HTMLInputElement | null;
     const value = input?.value.trim();
     if (value) {
-      window.location.href = `/search/inv_no:${encodeURIComponent(value)}`;
+      window.location.href = `/search?q=${encodeURIComponent(value)}`;
     }
   });
 </script>

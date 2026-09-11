@@ -1,0 +1,16 @@
+---
+import { getNode } from '../../../utils/taxonomy';
+import CategoryPage from '../../../components/finds/CategoryPage.astro';
+
+export async function getStaticPaths() {
+  return (['islamic', 'buddhist'] as const).map((domain) => ({
+    params: { domain },
+    props: { domain, node: getNode(domain, []) },
+  }));
+}
+
+const { domain, node } = Astro.props;
+if (!node) throw new Error(`No taxonomy root for domain ${domain}`);
+---
+
+<CategoryPage domain={domain} parts={[]} node={node} />

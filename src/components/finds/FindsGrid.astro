@@ -1,0 +1,47 @@
+---
+import { localFileUrl } from '../../utils/localImages';
+
+interface Props {
+  /** Full records, as returned by bdusQueryFull. */
+  records: any[];
+  /** Resolves a record's detail-page URL from its inv_no; return undefined to render an unlinked thumbnail. */
+  hrefFor: (invNo: string) => string | undefined;
+}
+
+const { records, hrefFor } = Astro.props;
+const defaultImg = '/images/css/image-not-available.jpg';
+---
+
+{records.length === 0 ? (
+  <p>No record found!</p>
+) : (
+  <div class="record-list">
+    <ul class="columns">
+      {records.map((r) => {
+        const invNo = r.core?.inv_no?.val ?? r.core?.invno?.val;
+        const measures = r.core?.measures?.val;
+        const file = r.files?.[0];
+        const src = file ? localFileUrl(file.id, file.ext) : defaultImg;
+        const href = hrefFor(invNo);
+        const title = `Inv. no.: ${invNo}${measures ? ` Measures:${measures}` : ''}`;
+        const image = <img src={src} alt="Record image" class="img-responsive img-thumbnail" loading="lazy" />;
+        return (
+          <li>
+            <div class="record">
+              <div class="image">
+                {href ? <a href={href} title={title}>{image}</a> : image}
+              </div>
+              <div class="description">
+                <dl>
+                  <dt>Inv. no.:</dt>
+                  <dd>{invNo}</dd>
+                  {measures && (<><dt>Measures:</dt><dd>{measures}</dd></>)}
+                </dl>
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+)}

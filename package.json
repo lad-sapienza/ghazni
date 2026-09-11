@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "fetch-images": "node --experimental-strip-types scripts/fetch-images.mjs",
+    "build": "npm run fetch-images && astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "add-collection": "scms-add-collection",

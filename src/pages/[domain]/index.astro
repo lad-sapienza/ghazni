@@ -1,0 +1,111 @@
+---
+// Mirrors _context_index.twig
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CategoryTiles from '../../components/finds/CategoryTiles.astro';
+import { getNode } from '../../utils/taxonomy';
+
+export async function getStaticPaths() {
+  return (['islamic', 'buddhist'] as const).map((domain) => ({ params: { domain }, props: { domain } }));
+}
+
+const { domain } = Astro.props as { domain: 'islamic' | 'buddhist' };
+
+const articles = await getCollection('articles');
+const byTags = (...tags: string[]) => articles.filter((a) => tags.every((t) => a.data.tags.includes(t)));
+
+const siteArticles = byTags(domain, 'sites');
+const models3d = byTags(domain, '3d');
+const findsRoot = getNode(domain, [])!;
+const galleryPath = domain === 'islamic' ? 'i_gallery' : 'b_gallery';
+const domainLabel = domain === 'islamic' ? 'Islamic' : 'Buddhist';
+---
+
+<BaseLayout title={`${domainLabel} Ghazni`} domain={domain}>
+  <div class="context_index">
+    <div class="container">
+      <div class="mt-5 pt-5">
+        <h1>{domainLabel} Ghazni</h1>
+
+        <section class="sites_and_buildings">
+          <h2 id="sites_and_buildings" class="text-center mb-5">Sites and buildings</h2>
+          <div class="sites_box p-3">
+            <div class="row">
+              {siteArticles.map((art) => (
+                <div class="col-4">
+                  <figure class="figure">
+                    <a href={`/${art.data.textid}`} title={art.data.title}>
+                      <img src={`/images/articles/600x600/${art.data.id}.jpg`} class="figure-img img-fluid rounded" alt={art.data.title} onerror="this.src='/images/css/image-not-available.jpg'" />
+                      <figcaption class="figure-caption text-center text-white">{art.data.title}</figcaption>
+                    </a>
+                  </figure>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <section class="image_gallery">
+      <div class="cover_container img_gallery d-flex align-items-center justify-content-center">
+        <a href={`/${domain}/${galleryPath}`} class="button">Image galleries</a>
+      </div>
+    </section>
+
+    <div class="container">
+      <section class="finds">
+        <h2 id="finds" class="text-center mb-5">Finds</h2>
+        <CategoryTiles node={findsRoot} basePath={`/${domain}/finds`} imagePath={domain} />
+      </section>
+    </div>
+
+    {models3d.length > 0 && (
+      <section class="py-5 bg-gray-dark mb-0">
+        <div class="container">
+          <h1 id="3d-models" class="text-center mb-5">3D Models</h1>
+          <div class="row">
+            {models3d.map((art) => (
+              <div class="col-4">
+                <figure class="figure">
+                  <a href={`/${art.data.textid}`} title={art.data.title}>
+                    <img src={`/images/articles/600x600/${art.data.id}.jpg`} class="figure-img img-fluid rounded" alt={art.data.title} onerror="this.src='/images/css/image-not-available.jpg'" />
+                    <figcaption class="figure-caption text-center text-white"><h4>{art.data.title}</h4></figcaption>
+                  </a>
+                </figure>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <section class="blog mt-0">
+      <div class="cover_container blog d-flex align-items-center justify-content-center">
+        <a href="/blog" class="button">Read the blog</a>
+      </div>
+    </section>
+
+    <div class="container">
+      <section class="bibliography">
+        <div class="row">
+          <div class="col text-end">
+            <h2 id="bibliography">Bibliography</h2>
+            <p>Pubblications on {domainLabel} Ghazni by scholars connected with the Italian Archaeological Mission in Afghanistan</p>
+          </div>
+          <div class="col text-start">
+            <a href="/bibliography" title="Bibliography">
+              <img src="/images/css/bibio.png" title="Bibliography" alt="biblio logo" style="max-width: 100px;" />
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="research_team mb-0">
+      <div class="cover_container research_team d-flex align-items-center justify-content-center">
+        <a href="/research-team" class="button">Research team</a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

@@ -3,6 +3,11 @@ dist/
 .astro/
 coverage/
 
+# fetched fresh by `npm run build` (scripts/fetch-images.mjs) from the live
+# BraDypUS API every time — thousands of finds/record photos, several GB;
+# never committed, see README "For staff/future maintainers"
+public/images/bdus/
+
 # dependencies
 node_modules/
 

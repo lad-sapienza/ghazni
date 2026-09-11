@@ -1,0 +1,209 @@
+---
+// Mirrors sites/default/modules/browseData/templates/record.php's 12-block
+// layout for the 3 finds contexts (islamic/buddhist/coins) and, when
+// `record.metadata.tb_id === 'funcomplex'`, the funerary-complex context.
+import { localFileUrl } from '../../utils/localImages';
+
+interface Props {
+  record: any;
+}
+const { record } = Astro.props;
+const core = record.core ?? {};
+const val = (name: string) => core[name]?.val;
+
+const isFuncomplex = record.metadata?.tb_id === 'funcomplex';
+let context: 'coins' | 'islamic' | 'buddhist' | 'funcomplex' | undefined;
+if (isFuncomplex) context = 'funcomplex';
+else if (String(val('class')).toLowerCase() === 'coins') context = 'coins';
+else if (String(val('archaeological_context')).toLowerCase() === 'islamic') context = 'islamic';
+else if (String(val('archaeological_context')).toLowerCase() === 'buddhist') context = 'buddhist';
+
+const invNo = val('inv_no') ?? val('invno');
+const defaultImg = '/images/css/image-not-available.jpg';
+
+function fileUrl(f: any) {
+  return f ? localFileUrl(f.id, f.ext) : defaultImg;
+}
+
+const files: any[] = record.files ?? [];
+const mainImg = fileUrl(files[0]);
+const otherImages = files.slice(1).filter((f) => ['jpg', 'jpeg', 'png'].includes(String(f.ext).toLowerCase()));
+
+// Block 1/2: context header line.
+let block1 = '';
+let block2 = '';
+if (context === 'coins') {
+  block1 = 'COINS';
+} else if (context === 'islamic') {
+  block1 = `${val('archaeological_context')} Ghazni: ${val('main_material')}`;
+  block2 = val('category') ?? '';
+} else if (context === 'buddhist') {
+  block1 = `${val('archaeological_context')} Ghazni: ${val('object')}`;
+} else if (context === 'funcomplex') {
+  block1 = `${val('cultcontext')} Ghazni: ${record.metadata?.tb_label ?? ''}`;
+}
+
+// Block 4: provenance line.
+const yearAuthor = String(val('year_author_excavation') ?? '').replace(/^[a-zA-Z]+\s+/, '');
+
+// Block 8: bibliography, via m_biblio_finds / m_biblio_funcomplex plugin table.
+const biblioKey = Object.keys(record.plugins ?? {}).find((k) => k.startsWith('m_biblio'));
+const biblioRows: any[] = biblioKey ? record.plugins[biblioKey].data ?? [] : [];
+
+// Block 10: inscriptions (finds only).
+const inscriptions: any[] = record.plugins?.m_inscriptions?.data ?? [];
+
+// Block 12: linked finds, for funerary complexes (v5's `links.finds` gives
+// count + filter; the actual rows are resolved by the page and passed in).
+---
+
+<div class="record-detail p-3" id="record-container">
+  <div class="rec-head mb-3">
+    <div class="row">
+      <div class="col"><span class="text-uppercase"><strong>{block1}</strong></span></div>
+      <div class="col text-end"><strong>Inv. no. {String(invNo).toUpperCase()}</strong></div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col">{block2}</div>
+      <div class="col text-end">
+        <small>
+          IsMEO / IsIAO Italian Archaeological Mission in Afghanistan
+          {yearAuthor && `, ${val('year_author_excavation')}`}
+          <br />{val('provenance')}
+          <br />{val('find_spot')}
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <div class="rec-body mt-5">
+    <div class="row">
+      <div class="col-5">
+        <div class="main_img text-center">
+          <a href={mainImg} data-fancybox="record-image">
+            <img src={mainImg} alt={String(invNo)} class="img-fluid" />
+          </a>
+        </div>
+
+        {otherImages.length > 0 && (
+          <div class="mt-5">
+            <h3 class="text-label mb-3 text-white">Other images</h3>
+            <div class="row">
+              {otherImages.map((f) => (
+                <div class="col-4">
+                  <a href={fileUrl(f)} data-fancybox="record-image">
+                    <img src={fileUrl(f)} class="img-fluid" alt={f.description ?? f.filename} />
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div class="col-7">
+        {context === 'coins' && (
+          <p>
+            {val('object')}<br />
+            {val('authority')}<br />
+            Mint and date: {val('mint')}<br />
+            {val('typology')}<br />
+            {val('weight')}; {val('measures')}
+          </p>
+        )}
+        {context === 'islamic' && (
+          <p>
+            {val('object')}<br />
+            {val('main_material')}<br />
+            {val('technique')}<br />
+            {val('measures')}<br />
+            {val('chronology')}
+          </p>
+        )}
+        {context === 'buddhist' && (
+          <p>
+            {val('subject')}<br />
+            {val('main_material')}{val('other_material') && `; ${val('other_material')}`}<br />
+            {val('technique')}{val('technique_details') && `; ${val('technique_details')}`}<br />
+            {val('measures')}<br />
+            {val('relative_chronology')}
+          </p>
+        )}
+        {context === 'funcomplex' && (
+          <p>
+            <strong>{val('name')}</strong><br />
+            {val('othernames') && <>Other names: {val('othernames')}<br /></>}
+            Location: {val('location')}<br />
+            Chronology: {val('chronology') ?? '-'}<br />
+          </p>
+        )}
+
+        <div class="my-4">
+          {val('description') && <span set:html={val('description').replace(/\n/g, '<br />')} />}
+          {context !== 'coins' && inscriptions.length > 0 && (
+            <div class="inscriptions my-2">
+              {inscriptions.map((ins: any) => (
+                <>
+                  <span lang="ar">{ins.inscr_transcription?.val}</span>
+                  <div>{ins.inscr_translation?.val}</div>
+                </>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {context !== 'funcomplex' && (
+          <div class="my-4">
+            Neg. no.: {val('bw_negative_no') || '-'}
+            <br />Digital photos: {val('colour_photos') || '-'}
+            {context !== 'coins' && <><br />Drawings: {val('drawings') || '-'}</>}
+          </div>
+        )}
+
+        {biblioRows.length > 0 && (
+          <div class="mt-5" id="reference-list-container">
+            <button type="button" class="btn btn-success" data-bs-toggle="collapse" data-bs-target="#reference-list">
+              References
+            </button>
+            <div id="reference-list" class="collapse py-3 d-print-block">
+              <ul>
+                {biblioRows.map((b: any) => {
+                  const abbrev = b.bibl_abbrev?.val_label;
+                  const slug = abbrev ? abbrev.toLowerCase().replace(/\s+/g, '-') : undefined;
+                  return (
+                    <li>
+                      <a href={`/bibliography#${slug}`} class="text-white">
+                        {abbrev}{b.bibl_details?.val && `, ${b.bibl_details.val}`}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+
+    {context === 'funcomplex' && Astro.slots.has('linkedFinds') && (
+      <div class="my-5">
+        <hr />
+        <h3 class="text-label my-5 text-white text-center">Browse linked Finds</h3>
+        <slot name="linkedFinds" />
+      </div>
+    )}
+  </div>
+
+  <div class="rec-footer">
+    <hr />
+    <div class="row">
+      <div class="col-sm-6" />
+      <div class="col-sm-6">
+        <div class="text-center">
+          <small>Gerda Henkel Stiftung | Università degli Studi di Napoli &ldquo;L&rsquo;Orientale&rdquo;</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

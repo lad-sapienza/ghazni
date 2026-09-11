@@ -1,0 +1,51 @@
+---
+import { breadcrumbLabels } from '../../utils/taxonomy';
+
+interface Props {
+  domain: 'islamic' | 'buddhist';
+  /** URL parts after the domain, e.g. ['finds', 'marble', 'frames']. */
+  parts: string[];
+}
+
+const { domain, parts } = Astro.props;
+
+// Mirrors breadcrumbs.php: walk the taxonomy in step with the URL parts,
+// falling back to fixed labels for the non-taxonomy segments ('finds',
+// 'funerary-complexes'), and dropping 'record' (its id follows right after
+// and is rendered as the active crumb by the page itself).
+const taxonomyParts = parts.filter((p) => p !== 'record' && p !== 'finds' && p !== 'funerary-complexes');
+const labels = breadcrumbLabels(domain, taxonomyParts);
+const labelById = new Map(labels.map((l) => [l.id, l.label]));
+
+interface Crumb { label: string; href?: string }
+const crumbs: Crumb[] = [{ label: domain === 'islamic' ? 'Islamic Ghazni' : 'Buddhist Ghazni', href: `/${domain}` }];
+
+let hrefParts: string[] = [];
+for (const part of parts) {
+  if (part === 'record') continue;
+  hrefParts = [...hrefParts, part];
+  let label = labelById.get(part);
+  if (!label) {
+    if (part === 'finds') label = 'Finds';
+    else if (part === 'funerary-complexes') label = 'Funerary complexes';
+    else label = part;
+  }
+  crumbs.push({ label, href: `/${domain}/${hrefParts.join('/')}` });
+}
+// Last crumb (current page) shouldn't link to itself.
+if (crumbs.length > 0) crumbs[crumbs.length - 1] = { label: crumbs[crumbs.length - 1].label };
+---
+
+<div class="submenu my-5">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        {crumbs.map((c, i) => (
+          i === crumbs.length - 1
+            ? <li class="breadcrumb-item active">{c.label}</li>
+            : <li class="breadcrumb-item"><a href={c.href}>{c.label}</a></li>
+        ))}
+      </ol>
+    </nav>
+  </div>
+</div>

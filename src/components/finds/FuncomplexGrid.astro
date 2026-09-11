@@ -1,0 +1,39 @@
+---
+import { localFileUrl } from '../../utils/localImages';
+
+interface Props {
+  records: any[];
+  /** e.g. "/islamic/funerary-complexes" */
+  recordHrefBase: string;
+}
+
+const { records, recordHrefBase } = Astro.props;
+const defaultImg = '/images/css/image-not-available.jpg';
+---
+
+{records.length === 0 ? (
+  <p>No record found!</p>
+) : (
+  <div class="record-list">
+    <ul class="columns">
+      {records.map((r) => {
+        const invno = r.core?.invno?.val;
+        const name = r.core?.name?.val;
+        const file = r.files?.[0];
+        const src = file ? localFileUrl(file.id, file.ext) : defaultImg;
+        return (
+          <li>
+            <div class="record">
+              <div class="image">
+                <a href={`${recordHrefBase}/record/${encodeURIComponent(invno)}`} title={`Inv. no.: ${invno} ${name}`}>
+                  <img src={src} alt="Record image" class="img-responsive img-thumbnail" loading="lazy" />
+                </a>
+              </div>
+              <div class="description">{name} ({invno})</div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+)}

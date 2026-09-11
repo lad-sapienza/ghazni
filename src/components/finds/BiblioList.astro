@@ -1,0 +1,63 @@
+---
+// Mirrors sites/default/modules/browseData/templates/bibliography.php,
+// reading from the full v5 record shape (core.<field>.val) instead of the
+// v4 flat row shape.
+interface Props {
+  records: any[];
+}
+const { records } = Astro.props;
+
+function field(r: any, name: string): string | undefined {
+  return r.core?.[name]?.val ?? undefined;
+}
+
+function slug(abbrev: string) {
+  return abbrev.toLowerCase().replace(/\s+/g, '-');
+}
+---
+
+{records.length > 0 && (
+  <ul class="biblio">
+    {records.map((r) => {
+      const abbrev = field(r, 'abbrev');
+      const author = field(r, 'author');
+      const title = field(r, 'title');
+      const journal = field(r, 'journal')?.replace(/^in /, 'In ');
+      const journalNo = field(r, 'journal_no');
+      const place = field(r, 'place');
+      const pp = field(r, 'pp');
+      const url = field(r, 'url');
+      const doi = field(r, 'doi');
+      let isbn = field(r, 'isbn');
+      let issn: string | undefined;
+      const issnMatch = isbn?.match(/\(ISSN ([0-9]{4}-[0-9]{4})\)/);
+      if (issnMatch) {
+        issn = issnMatch[1];
+        isbn = undefined;
+      }
+
+      return (
+        <li>
+          <span id={abbrev ? slug(abbrev) : undefined}>
+            {abbrev && <span class="abbrev"><strong>{abbrev}</strong><br /></span>}
+            {author && <span class="author">{author}, </span>}
+            {title && <span class="title">{title}. </span>}
+            {journal && (
+              <>
+                <span class="journal">{journal}</span>
+                {journalNo && <span class="journal-no">, {journalNo}</span>}
+                {place && '. '}
+              </>
+            )}
+            {place && <span class="place">{place}</span>}
+            {pp ? <span class="pages">: {pp}. </span> : (place || journal) ? <span class="pages">. </span> : null}
+            {url && <span class="url">URL: <a href={url} target="_blank" rel="noreferrer">{url}</a>. </span>}
+            {doi && <span class="doi">DOI: <a href={`https://dx.doi.org/${doi}`} target="_blank" rel="noreferrer">{doi}</a>. </span>}
+            {isbn && <span class="isbn">ISBN: {isbn}.</span>}
+            {issn && <span class="issn">ISSN: {issn}.</span>}
+          </span>
+        </li>
+      );
+    })}
+  </ul>
+)}

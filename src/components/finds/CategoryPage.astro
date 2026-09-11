@@ -1,0 +1,78 @@
+---
+// Mirrors showContent.php: breadcrumb, optional intro article (matching the
+// current taxonomy node's own id), then either a grid of subcategory tiles
+// (branch) or the finds grid for that category's query (leaf).
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import CategoryTiles from './CategoryTiles.astro';
+import FindsGrid from './FindsGrid.astro';
+import { bdusQueryFull } from '../../utils/bdus';
+import type { TaxonomyNode } from '../../utils/taxonomy';
+
+interface Props {
+  domain: 'islamic' | 'buddhist';
+  /** Taxonomy-relative parts (no domain, no "finds"). */
+  parts: string[];
+  node: TaxonomyNode;
+}
+const { domain, parts, node } = Astro.props;
+
+const articles = await getCollection('articles');
+const byTextid = new Map(articles.map((a) => [a.data.textid, a]));
+
+// Top-level /{domain}/finds also shows the section's own long intro
+// (article "islamic_finds" / "buddhist_finds"), in addition to the
+// per-node intro below.
+let SectionIntro;
+if (parts.length === 0) {
+  const entry = byTextid.get(`${domain}_finds`);
+  if (entry) SectionIntro = (await render(entry)).Content;
+}
+
+const nodeArticle = byTextid.get(node.id);
+const NodeIntro = nodeArticle ? (await render(nodeArticle)).Content : undefined;
+
+const basePath = `/${domain}/finds${parts.length ? '/' + parts.join('/') : ''}`;
+// CategoryTiles' thumbnails live at public/images/finds/{domain}/{parts}/{id}.jpg
+const imagePath = [domain, ...parts].join('/');
+
+let records: any[] | undefined;
+let placeholderMessage: string | undefined;
+if (!node.items) {
+  if (node.shortsql?.startsWith('MSG:')) {
+    placeholderMessage = node.shortsql.replace(/^MSG:\s*/, '');
+  } else if (node.shortsql) {
+    records = await bdusQueryFull(node.shortsql);
+  }
+}
+---
+
+<BaseLayout title={node.label} domain={domain}>
+  <Breadcrumbs domain={domain} parts={['finds', ...parts]} />
+
+  <div class="container mb-5 pb-5">
+    {SectionIntro && (
+      <>
+        <SectionIntro />
+        <hr />
+      </>
+    )}
+    {NodeIntro && (
+      <>
+        <NodeIntro />
+        <hr />
+      </>
+    )}
+
+    {node.items ? (
+      <CategoryTiles node={node} basePath={basePath} imagePath={imagePath} />
+    ) : placeholderMessage ? (
+      <p>{placeholderMessage}</p>
+    ) : records ? (
+      <FindsGrid records={records} hrefFor={(invNo) => `${basePath}/record/${encodeURIComponent(invNo)}`} />
+    ) : (
+      <p>Sorry, something went wrong. Please report this error to rgiunta@unior.it and please include the full URL of this page.</p>
+    )}
+  </div>
+</BaseLayout>

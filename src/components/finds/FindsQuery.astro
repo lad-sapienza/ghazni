@@ -1,0 +1,25 @@
+---
+// Replaces the original [[browseData]]shortsql[[/browseData]] tag wherever
+// it's embedded directly in article prose (outside the taxonomy pages,
+// which use FindsGrid/FuncomplexGrid/BiblioList directly with a known
+// context). Dispatches on the table named in the shortsql itself.
+import { bdusQueryFull } from '../../utils/bdus';
+import { parseShortSQL } from '../../utils/shortsql';
+import { findUrl } from '../../utils/recordIndex';
+import FindsGrid from './FindsGrid.astro';
+import FuncomplexGrid from './FuncomplexGrid.astro';
+import BiblioList from './BiblioList.astro';
+
+interface Props {
+  shortsql: string;
+}
+const { shortsql } = Astro.props;
+const parsed = parseShortSQL(shortsql);
+const records = await bdusQueryFull(shortsql);
+---
+
+{parsed.tb === 'bibliography' && <BiblioList records={records} />}
+{parsed.tb === 'funcomplex' && <FuncomplexGrid records={records} recordHrefBase="/islamic/funerary-complexes" />}
+{parsed.tb === 'finds' && (
+  <FindsGrid records={records} hrefFor={(invNo) => findUrl(invNo)} />
+)}
