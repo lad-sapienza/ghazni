@@ -1,14 +1,77 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const projectSummary =
+  'The project brings together the documentation collected in Ghazni over decades of field work by the Italian Archaeological Mission in Afghanistan, with the aim of safeguarding and disseminating an endangered Cultural Heritage.';
 ---
 
-<BaseLayout>
-  <h1>Welcome to your new s:CMS site</h1>
-  <p class="lead">
-    Edit <code>src/pages/index.astro</code> to change this page.
-  </p>
-  <p>
-    Run <code>npm run add-collection</code> to scaffold your first content
-    collection, or start writing components directly in <code>src/</code>.
-  </p>
+<BaseLayout isHome>
+  <div class="home">
+    <header class="home-hero d-flex align-items-center justify-content-center">
+      <div class="text-center container my-5">
+        <img src="/images/css/logo_home.png" class="img-fluid" alt="Ghazni. Archives of the Italian Archaeological Mission in Afghanistan" />
+        <h1>Buddhist and Islamic Archaeological Data from Ghazni, Afghanistan</h1>
+        <p class="lead">A multidisciplinary digital archive for the managing and preservation of an endangered cultural heritage</p>
+      </div>
+    </header>
+
+    <section class="my-5">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <div class="buddhist d-flex justify-content-center align-items-end">
+              <a class="button" href="/buddhist" title="Buddhist Ghazni">Buddhist Ghazni</a>
+            </div>
+          </div>
+          <div class="col">
+            <div class="islamic d-flex justify-content-center align-items-end">
+              <a class="button" href="/islamic" title="Islamic Ghazni">Islamic Ghazni</a>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-center my-3">Discover Buddhist and Islamic sections</p>
+      </div>
+    </section>
+
+    <section class="mt-5 py-5 bg-gray-dark">
+      <div class="container text-center">
+        <h2>The Ghazni project</h2>
+        <p>{projectSummary}</p>
+        <p class="mt-5">
+          <a href="/ghazni-project" class="button" title="The Ghazni project">More</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <div class="buddhist d-flex justify-content-center align-items-center">
+        <a class="button" href="/archaeological-mission" title="Buddhist Ghazni">
+          The Italian Archaeological Mission in Afghanistan
+        </a>
+      </div>
+    </section>
+
+    <section class="bibliography my-5">
+      <div class="container">
+        <div class="row">
+          <div class="col text-end">
+            <h2 id="bibliography">Bibliography</h2>
+            <p>Pubblications on Ghazni by scholars connected with the Italian Archaeological Mission in Afghanistan</p>
+          </div>
+          <div class="col text-start">
+            <a href="/bibliography" title="Bibliography">
+              <img src="/images/css/bibio.png" title="Bibliography" alt="biblio logo" style="max-width: 100px;" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="research_team">
+      <div class="cover_container research_team d-flex align-items-center justify-content-center">
+        <a href="/research-team" class="button">Research team</a>
+      </div>
+    </section>
+  </div>
 </BaseLayout>

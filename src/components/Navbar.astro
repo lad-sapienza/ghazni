@@ -1,0 +1,46 @@
+---
+import BSNavbar from '@lad-sapienza/scms-core/components/BSNavbar';
+import { menuForDomain, type Domain } from '../utils/menus';
+
+interface Props {
+  domain?: Domain;
+  isHome?: boolean;
+}
+
+const { domain, isHome = false } = Astro.props;
+const menuItems = menuForDomain(domain);
+const currentPath = Astro.url.pathname;
+---
+
+<div class:list={['ghazni-nav-wrap position-relative', { 'sticky-top': !isHome }]}>
+  <BSNavbar
+    client:load
+    menuItems={menuItems}
+    currentPath={currentPath}
+    cssClasses={{ nav: 'ghazni-nav', ul: 'ms-auto' }}
+    brand={{ text: 'Ghazni', link: '/', cssClasses: 'ghazni-brand' }}
+  />
+
+  {!isHome && (
+    <form class="ghazni-search" action="#" id="search_db">
+      <input
+        type="search"
+        placeholder="Search by inventory"
+        class="form-control form-control-sm"
+        id="input_search_db"
+      />
+    </form>
+  )}
+</div>
+
+<script>
+  const form = document.getElementById('search_db') as HTMLFormElement | null;
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('input_search_db') as HTMLInputElement | null;
+    const value = input?.value.trim();
+    if (value) {
+      window.location.href = `/search/inv_no:${encodeURIComponent(value)}`;
+    }
+  });
+</script>

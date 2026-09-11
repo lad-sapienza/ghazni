@@ -1,0 +1,43 @@
+---
+import { genericFooterMenu, islamicFooterMenu, buddhistFooterMenu } from '../utils/menus';
+
+const columns = [
+  { title: 'Italian Mission', items: genericFooterMenu },
+  { title: 'Buddhist Ghazni', items: buddhistFooterMenu },
+  { title: 'Islamic Ghazni', items: islamicFooterMenu },
+];
+---
+
+<footer class="ghazni-footer p-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <img src="/images/css/logo_white.png" alt="Ghazni logo" title="Ghazni. Italian Archaeological Mission in Afghanistan" class="img-fluid" />
+        <p class="text-end mt-3 mb-0">Gerda Henkel Stiftung</p>
+        <p class="text-end">Università di Napoli &ldquo;L&rsquo;Orientale&rdquo;</p>
+      </div>
+      <div class="col-sm-9">
+        <div class="row">
+          {columns.map((col) => (
+            <div class="col-sm-4">
+              <p class="lead text-center">{col.title}</p>
+              <ul class="menu">
+                {col.items.map((item) => (
+                  <li><a href={item.href}>{item.label}</a></li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div class="border-top mt-5 pt-3 text-center">
+          <p class="mb-0">
+            <a href="mailto:afiligenzi@unior.it">afiligenzi@unior.it</a>
+            &nbsp;|&nbsp;
+            <a href="mailto:rgiunta@unior.it">rgiunta@unior.it</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

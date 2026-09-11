@@ -1,0 +1,350 @@
+/**
+ * Ghazni palette and component styles.
+ * Ported from the original PHP/Twig site (sites/default/css/styles.less),
+ * adapted to Bootstrap 5 utility classes (text-end vs text-right, etc.)
+ * and to Bootstrap 5's CSS-variable theming.
+ */
+
+@yellow: #fff8e3;
+@teal-darken-4: #004d40;
+@gray: #efebe9;
+@gray-light: #f2f1f0;
+@primary: @teal-darken-4;
+
+:root {
+  --bs-primary: @primary;
+  --bs-primary-rgb: 0, 77, 64;
+  --bs-link-color: @primary;
+  --bs-link-hover-color: darken(@primary, 10%);
+}
+
+body {
+  padding-top: 4.5rem;
+}
+body.is-home {
+  padding-top: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: @primary;
+}
+
+a.button {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  border: 0.3rem solid @primary;
+  background-color: rgba(255, 255, 255, 0.7);
+  color: @primary;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-decoration: none;
+
+  &:hover {
+    background-color: @primary;
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.bg-gray {
+  background-color: @gray;
+}
+.bg-gray-dark {
+  background-color: @gray;
+}
+
+/* ------------------------------- Navbar -------------------------------- */
+.ghazni-nav-wrap {
+  z-index: 1030;
+}
+
+nav.navbar.ghazni-nav {
+  background-color: @teal-darken-4 !important;
+
+  .ghazni-brand {
+    display: inline-block;
+    width: 90px;
+    height: 40px;
+    background: url('/images/css/logo_white.png') no-repeat left center;
+    background-size: contain;
+    text-indent: -9999px;
+    overflow: hidden;
+  }
+
+  .nav-link,
+  .navbar-toggler {
+    color: #c6c6c6 !important;
+  }
+
+  .nav-item:hover,
+  .nav-item.active {
+    background-color: #003329;
+    .nav-link {
+      color: #fff !important;
+    }
+  }
+
+  .dropdown-menu {
+    background-color: #c6c6c6;
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    a.dropdown-item,
+    button.dropdown-item {
+      color: #003329 !important;
+      border-bottom: 2px solid @teal-darken-4;
+
+      &.active,
+      &:hover {
+        background-color: @teal-darken-4 !important;
+        color: #fff !important;
+      }
+    }
+  }
+}
+
+.ghazni-search {
+  position: absolute;
+  top: 0.6rem;
+  right: 1rem;
+  z-index: 1031;
+
+  input[type='search'] {
+    min-width: 10rem;
+  }
+
+  @media (max-width: 991.98px) {
+    position: static;
+    padding: 0 1rem 0.75rem;
+  }
+}
+
+/* ---------------------------- Breadcrumb -------------------------------- */
+.submenu {
+  background-color: @gray;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+
+  ol.breadcrumb {
+    background-color: transparent;
+    margin-bottom: 0;
+
+    li,
+    li a {
+      color: @primary;
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    li.active {
+      color: fade(@primary, 50%);
+    }
+  }
+}
+
+/* ------------------------------- Home ------------------------------------ */
+.home {
+  header.home-hero {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url('/images/css/home_bg.jpg');
+
+    h1 {
+      color: #000;
+      text-transform: uppercase;
+      font-size: 1.5rem;
+    }
+    img {
+      max-width: 400px;
+    }
+  }
+
+  .buddhist,
+  .islamic {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 350px;
+
+    .button {
+      margin-bottom: 1.5rem;
+    }
+  }
+  .buddhist {
+    background-image: url('/images/css/buddhist.jpg');
+  }
+  .islamic {
+    background-image: url('/images/css/islamic.jpg');
+  }
+
+  .cover_container {
+    height: 300px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    &.research_team {
+      background-image: url('/images/css/research_team_bg.jpg');
+    }
+  }
+}
+
+/* --------------------------- Context index -------------------------------- */
+.context_index {
+  section {
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+  }
+  .sites_and_buildings .sites_box {
+    background: @primary;
+  }
+
+  .cover_container {
+    height: 300px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    &.img_gallery {
+      background-image: url('/images/css/img_gallery_bg.jpg');
+    }
+    &.blog {
+      background-image: url('/images/css/blog_bg.jpg');
+    }
+    &.research_team {
+      background-image: url('/images/css/research_team_bg.jpg');
+    }
+  }
+
+  .finds .finds_box {
+    figure {
+      background-color: @gray-light;
+      a figcaption {
+        color: @primary !important;
+      }
+    }
+  }
+}
+
+/* --------------------------------- Blog ----------------------------------- */
+.blog {
+  .blog-item {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 3rem;
+    background-color: @gray-light;
+    display: block;
+  }
+}
+
+/* ------------------------------ Finds lists -------------------------------- */
+ul.columns {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    width: 220px;
+    break-inside: avoid;
+
+    &:hover {
+      background: #ebebeb;
+      border: 1px solid darken(#fff, 30%);
+
+      a {
+        color: #000;
+      }
+      .description,
+      .description a {
+        color: #333;
+      }
+    }
+
+    .description {
+      color: #999;
+      a {
+        color: #999;
+      }
+      dt,
+      dd {
+        float: left;
+      }
+      dt {
+        margin-right: 3px;
+        clear: both;
+      }
+    }
+  }
+}
+
+.pagination {
+  li a {
+    color: @primary;
+  }
+  li.active a {
+    background-color: @primary !important;
+    border-color: @primary !important;
+    color: #fff !important;
+  }
+}
+
+/* ------------------------------ Record detail ------------------------------ */
+.record-detail {
+  @media screen {
+    background: #014d41;
+    color: rgba(255, 255, 255, 0.7);
+    hr {
+      border-top: 1px solid #fff;
+    }
+    .btn-success {
+      background: lighten(#014d41, 5%) !important;
+      text-transform: uppercase;
+    }
+  }
+  @media print {
+    background: #fff;
+    color: #000;
+    hr {
+      border-top: 1px solid #000;
+    }
+  }
+}
+
+/* ------------------------------- Bibliography ------------------------------- */
+.biblio li {
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  text-indent: -1.5rem;
+
+  & > span {
+    padding: 0.4rem 0;
+  }
+  &.selected > span {
+    background-color: yellow;
+  }
+}
+
+/* --------------------------------- Footer ----------------------------------- */
+footer.ghazni-footer {
+  background-color: #000;
+  color: rgba(255, 255, 255, 0.8);
+
+  h5 {
+    color: #fff;
+  }
+  a {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  ul.menu {
+    list-style: none;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+}

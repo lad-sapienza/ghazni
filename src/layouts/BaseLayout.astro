@@ -1,19 +1,21 @@
 ---
-import "../styles/global.css"
-import SEO from "@lad-sapienza/scms-core/components/SEO/SEO.astro"
-import BSNavbar from "@lad-sapienza/scms-core/components/BSNavbar"
-import ThemeToggle from "@lad-sapienza/scms-core/components/ThemeToggle"
-import { siteMetadata } from "../user.config.mjs"
+import '../styles/global.css';
+import '../styles/ghazni.less';
+import SEO from '@lad-sapienza/scms-core/components/SEO/SEO.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { siteMetadata } from '../user.config.mjs';
+import type { Domain } from '../utils/menus';
 
 interface Props {
-  title?: string
-  description?: string
+  title?: string;
+  description?: string;
+  domain?: Domain;
+  isHome?: boolean;
 }
 
-const { title = siteMetadata.title, description = siteMetadata.description } =
-  Astro.props
-
-const currentPath = Astro.url.pathname
+const { title = siteMetadata.title, description = siteMetadata.description, domain, isHome = false } =
+  Astro.props;
 ---
 
 <!doctype html>
@@ -21,40 +23,27 @@ const currentPath = Astro.url.pathname
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+    <link rel="shortcut icon" href="/images/css/favicon.png" />
     <SEO title={title} description={description} siteMetadata={siteMetadata} />
     <slot name="head" />
+    <script is:inline>
+      /* Ghazni never had a dark mode — pin scms-core's theme system to light. */
+      try {
+        localStorage.setItem('scms-theme', 'light');
+      } catch (e) {}
+      document.documentElement.setAttribute('data-bs-theme', 'light');
+    </script>
   </head>
 
-  <body class="d-flex flex-column min-vh-100">
-    <BSNavbar
-      client:load
-      menuItems={[]}
-      currentPath={currentPath}
-      cssClasses={{
-        nav: "bg-body-tertiary navbar-expand-md sticky-top shadow-sm border-bottom",
-        ul: "ms-auto mb-2 mb-md-0",
-        li: "text-center fw-medium",
-      }}
-      brand={{
-        text: siteMetadata.title,
-        link: "/",
-        cssClasses: "fw-bold",
-      }}
-    />
-    <ThemeToggle client:load />
+  <body class:list={['d-flex flex-column min-vh-100', { 'is-home': isHome }]}>
+    <Navbar domain={domain} isHome={isHome} />
 
-    <main
-      class="container flex-grow-1"
-      style="padding-top: 6rem; padding-bottom: 3rem;"
-    >
+    <main class="flex-grow-1">
       <slot />
     </main>
 
-    <footer class="py-4 mt-auto border-top">
-      <div class="container text-center text-muted small">
-        Built with <a href="https://github.com/lad-sapienza/scms-core" target="_blank" rel="noreferrer">s:CMS</a>
-      </div>
-    </footer>
+    <Footer />
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
