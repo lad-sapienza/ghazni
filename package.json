@@ -1,0 +1,31 @@
+{
+  "name": "ghazni-scms",
+  "version": "0.1.0",
+  "description": "Buddhist and Islamic Archaeological Data from Ghazni, Afghanistan. A multidisciplinary digital archive for the managing and preservation of an endangered cultural heritage.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "add-collection": "scms-add-collection",
+    "add-content": "scms-add-content"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/markdown-remark": "^7.2.4",
+    "@lad-sapienza/scms-core": "^0.1.0-alpha.11",
+    "astro": "^7.2.4",
+    "bootstrap": "^5.3.8",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "maplibre-gl": "^6.7.0",
+    "rehype-slug": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^5.9.3"
+  }
+}
