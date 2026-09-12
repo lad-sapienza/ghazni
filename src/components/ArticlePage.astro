@@ -23,7 +23,7 @@ const showTitleBanner = !entry.data.tags.includes('finds');
 
 const hasHero =
   !entry.data.tags.includes('3d') &&
-  existsSync(join(process.cwd(), `public/images/articles/400x300/${entry.data.id}.jpg`));
+  existsSync(join(process.cwd(), `public/images/articles/800x600/${entry.data.id}.jpg`));
 ---
 
 <BaseLayout title={entry.data.title} description={entry.data.summary} domain={domain}>
@@ -41,7 +41,7 @@ const hasHero =
         {hasHero && (
           <img
             class="img-thumbnail article-image img-fluid"
-            src={`/images/articles/400x300/${entry.data.id}.jpg`}
+            src={`/images/articles/800x600/${entry.data.id}.jpg`}
             alt={entry.data.title}
             title={entry.data.title}
             style="float: left; margin: 0 10px 10px 0; max-width: 200px;"
