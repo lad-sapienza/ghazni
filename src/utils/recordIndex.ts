@@ -26,7 +26,7 @@ async function indexDomain(domain: 'islamic' | 'buddhist') {
       sortDir: node.query.sortDir,
       limit: node.query.limit,
     });
-    const base = `/${domain}/${parts.join('/')}`;
+    const base = `/${domain}/finds/${parts.join('/')}`;
     for (const row of rows) {
       if (!invNoToUrl.has(row.inv_no)) {
         invNoToUrl.set(row.inv_no, `${base}/record/${encodeURIComponent(row.inv_no)}`);

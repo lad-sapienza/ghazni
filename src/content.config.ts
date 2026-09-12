@@ -16,6 +16,8 @@ const articles = defineCollection({
     tags: z.array(z.string()).default([]),
     author: z.string().optional(),
     publish: z.string().optional(),
+    /** Original CMS's manual ordering, for tag-filtered listings (e.g. the domain index's "Sites and buildings" tiles). */
+    sort: z.number().default(0),
   }),
 });
 

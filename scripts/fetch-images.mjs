@@ -10,7 +10,7 @@
  * Already-downloaded files are skipped on subsequent runs, so a routine
  * rebuild only fetches what's new since the last one.
  */
-import { readFileSync, readdirSync, mkdirSync, existsSync, writeFileSync } from 'node:fs';
+import { readFileSync, readdirSync, mkdirSync, existsSync, writeFileSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -24,6 +24,14 @@ try {
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
+
+// This script and the `astro build` that follows it are separate Node
+// processes, so bdus.ts's in-memory cache alone doesn't stop `astro build`
+// from re-fetching everything this script already fetched — hence its
+// on-disk .bdus-cache/. That cache is only meant to bridge THESE two
+// processes for THIS build, not survive to the next one, so wipe it before
+// anything else runs (this script always runs first, see package.json).
+rmSync(join(root, '.bdus-cache'), { recursive: true, force: true });
 
 const { flattenDomain } = await import('../src/utils/taxonomy.ts');
 const { bdusListAll, bdusRecord } = await import('../src/utils/bdus.ts');

@@ -8,6 +8,9 @@
  * static, GitHub Pages–hosted site.
  */
 import type { FilterNode } from './shortsql.ts';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 // import.meta.env when Vite processes this (Astro pages/components); plain
 // process.env when scripts/fetch-images.mjs imports it directly via Node.
@@ -22,17 +25,38 @@ if (!API_KEY) {
   );
 }
 
-// In-memory only (one `astro build` process): the same find often shows up
-// in a category grid, a record page and a funerary-complex's linked-finds
-// preview. Memoizing avoids re-fetching it three times in the same build.
-// Deliberately NOT persisted across separate builds — every `npm run build`
-// should see the live BraDypUS data as of that moment.
+// In-memory: the same find often shows up in a category grid, a record page
+// and a funerary-complex's linked-finds preview. Memoizing avoids re-fetching
+// it three times in the same process.
 const cache = new Map<string, Promise<any>>();
+
+// On-disk, in addition: `npm run build` runs fetch-images.mjs and `astro
+// build` as two SEPARATE Node processes, so the in-memory cache alone still
+// meant every record got fetched twice per build (once to check/download its
+// images, once again to render its page) — the dominant cost of a build,
+// dwarfing the actual image bytes. This directory bridges the two processes
+// within one `npm run build` run. It is NOT meant to survive to the next
+// run — scripts/fetch-images.mjs (always first in the build) deletes it
+// before doing anything, so every build still sees live BraDypUS data as of
+// that moment; only the two sub-processes *within* that one build share it.
+const DISK_CACHE_DIR = join(process.cwd(), '.bdus-cache');
+
+function diskCachePath(cacheKey: string): string {
+  const hash = createHash('sha256').update(cacheKey).digest('hex');
+  return join(DISK_CACHE_DIR, `${hash}.json`);
+}
 
 async function bdusFetch(path: string, init?: RequestInit): Promise<any> {
   const cacheKey = `${path}:${init?.body ?? ''}`;
   const cached = cache.get(cacheKey);
   if (cached) return cached;
+
+  const diskPath = diskCachePath(cacheKey);
+  if (existsSync(diskPath)) {
+    const promise = Promise.resolve(JSON.parse(readFileSync(diskPath, 'utf8')));
+    cache.set(cacheKey, promise);
+    return promise;
+  }
 
   const promise = (async () => {
     const res = await fetch(`${BASE_URL}${path}`, {
@@ -50,6 +74,8 @@ async function bdusFetch(path: string, init?: RequestInit): Promise<any> {
     if (data.status === 'error') {
       throw new Error(`BraDypUS API ${path} -> ${data.code ?? 'error'}: ${data.detail ?? ''}`);
     }
+    mkdirSync(DISK_CACHE_DIR, { recursive: true });
+    writeFileSync(diskPath, JSON.stringify(data), 'utf8');
     return data;
   })();
 

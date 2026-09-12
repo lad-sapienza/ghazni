@@ -12,7 +12,13 @@ export async function getStaticPaths() {
 const { domain } = Astro.props as { domain: 'islamic' | 'buddhist' };
 
 const articles = await getCollection('articles');
-const byTags = (...tags: string[]) => articles.filter((a) => tags.every((t) => a.data.tags.includes(t)));
+// `sort` ties at 0 for most articles (never set in the original CMS) — id
+// ascending is the actual tiebreaker there (verified against the old site's
+// real tile order), so use it as one.
+const byTags = (...tags: string[]) =>
+  articles
+    .filter((a) => tags.every((t) => a.data.tags.includes(t)))
+    .sort((a, b) => a.data.sort - b.data.sort || a.data.id - b.data.id);
 
 const siteArticles = byTags(domain, 'sites');
 const models3d = byTags(domain, '3d');

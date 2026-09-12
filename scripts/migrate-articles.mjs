@@ -17,6 +17,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { decodeHTML } from 'entities';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const articles = JSON.parse(readFileSync(join(__dirname, 'migration-data/articles.json'), 'utf8'));
@@ -32,9 +33,11 @@ const outDir = join(__dirname, '../src/content/articles');
 mkdirSync(outDir, { recursive: true });
 
 function stripHtml(html) {
-  return (html ?? '')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&nbsp;/g, ' ')
+  // Strip tags first (the summary field is a one-liner blurb, only ever
+  // wraps its text in a <p>), then decode entities — order matters, doing
+  // it the other way could turn an entity-encoded "&lt;" into a real "<"
+  // and have it misread as a tag by the strip step.
+  return decodeHTML((html ?? '').replace(/<[^>]+>/g, ' '))
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -122,10 +125,14 @@ function convertTags(articleId, html) {
 
   // [[map ...]]Title[[/map]] — single occurrence sitewide; kept generic in
   // case more appear later. Renders sCMS's own Map, centered on the point.
+  // client:only, not client:load: MapLibre draws to a <canvas> it fully
+  // owns, so there's no meaningful server-rendered markup to hydrate onto
+  // in the first place — client:load's SSR pass produces a mismatch (React
+  // error #418) even when the two renders are otherwise "the same".
   html = html.replace(/\[\[map([^\]]*)\]\](.*?)\[\[\/map\]\]/gs, (_, attrsRaw) => {
     const a = parseAttrs(attrsRaw);
     const [lat, lng] = (a.marker ?? '').split(',').map((s) => s.trim());
-    return `<Map client:load center=${jsxAttr(`${lng},${lat},${a.zoom ?? 10}`)} height="400px" />`;
+    return `<Map client:only="react" center=${jsxAttr(`${lng},${lat},${a.zoom ?? 10}`)} height="400px" />`;
   });
 
   // A few articles link straight to a media file (PDFs, mostly) via a plain
@@ -164,6 +171,7 @@ for (const art of articles) {
     tags.length ? `tags: ${JSON.stringify(tags)}` : null,
     art.author ? `author: ${yamlString(art.author)}` : null,
     art.publish ? `publish: ${yamlString(art.publish)}` : null,
+    art.sort ? `sort: ${art.sort}` : null,
     '---',
   ].filter(Boolean).join('\n');
 

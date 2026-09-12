@@ -8,6 +8,10 @@ coverage/
 # never committed, see README "For staff/future maintainers"
 public/images/bdus/
 
+# on-disk API response cache bridging fetch-images.mjs and astro build
+# within one `npm run build` run — wiped and repopulated on every run
+.bdus-cache/
+
 # dependencies
 node_modules/
 
