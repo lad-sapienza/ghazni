@@ -129,6 +129,7 @@ await pool([...recordIds], 15, async (key) => {
   const [tb, id] = key.split(':');
   const record = await bdusRecord(tb, id);
   for (const file of record.files ?? []) {
+    if (!file.is_image) continue; // records sometimes carry PDFs (reports, scans) alongside photos — never displayed, not worth the space
     const filename = `${file.id}.${file.ext.toLowerCase()}`;
     if (already.has(filename)) continue;
     already.add(filename); // reserve before await, so concurrent workers don't double-fetch
