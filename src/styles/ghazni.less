@@ -302,6 +302,15 @@ nav.navbar.ghazni-nav {
     padding: 3rem;
     background-color: @gray-light;
     display: block;
+
+    // img-fluid alone just scales to 100% of its column, uncapped — fine
+    // at most widths, but Bootstrap 5's .container grows to 1320px above
+    // 1400px viewports (Bootstrap 4's, on the original site, tops out at
+    // 1140px), so the cover kept growing past a sensible size on wide
+    // desktops. Cap it instead of chasing the old framework's breakpoints.
+    img {
+      max-width: 420px;
+    }
   }
 }
 

@@ -129,11 +129,17 @@ async function pool(items, concurrency, fn) {
 
 let downloaded = 0;
 
+const IMAGE_EXTS = new Set(['jpg', 'jpeg', 'png', 'webp', 'gif']);
+
 await pool([...recordIds], 15, async (key) => {
   const [tb, id] = key.split(':');
   const record = await bdusRecord(tb, id);
   for (const file of record.files ?? []) {
-    if (!file.is_image) continue; // records sometimes carry PDFs (reports, scans) alongside photos — never displayed, not worth the space
+    // Usually `is_image` alone is enough to skip the PDFs/scans records
+    // sometimes carry alongside photos — but it's come back `false` for
+    // legitimate webp uploads (a BraDypUS-side classification gap, not
+    // this site's bug), so also accept a recognized image extension.
+    if (!file.is_image && !IMAGE_EXTS.has(String(file.ext).toLowerCase())) continue;
     const filename = `${file.id}.${file.ext.toLowerCase()}`;
     if (already.has(filename)) continue;
     already.add(filename); // reserve before await, so concurrent workers don't double-fetch

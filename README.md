@@ -18,7 +18,7 @@ This is a migration of the original PHP/BraDypUS CMS site (kept, for archive, in
 
 ## How this site works (read this first)
 
-Almost everything under `/islamic/…` and `/buddhist/…` — the "finds" browsing, the record pages, the funerary complexes, the bibliography — is **not stored in this repository**. It is fetched live from the BraDypUS v5 database at **build time** and turned into static HTML. There is no database query at runtime: a visitor's browser never talks to BraDypUS, only to the static files GitHub Pages serves.
+Almost everything under `/islamic/…` and `/buddhist/…` — the "finds" browsing, the record pages, the funerary complexes, the bibliography — is **not stored in this repository**. Neither is the blog. All of it is fetched live from the BraDypUS v5 database at **build time** and turned into static HTML. There is no database query at runtime: a visitor's browser never talks to BraDypUS, only to the static files GitHub Pages serves.
 
 This means:
 
@@ -46,6 +46,8 @@ on:
 
 That's the only change needed — the existing job already does a full `npm run build` from live data. Remove the `schedule:` block again once things go quiet — there's no harm in a period with both push-triggered and scheduled builds overlapping, `concurrency:` in the workflow already prevents overlapping runs.
 
+**The blog is the one exception** — since posts are published directly in BraDypUS, not via a git push, nothing above would ever pick up a new one on its own. `.github/workflows/check-blog-updates.yml` runs nightly, checks BraDypUS for a change in the number of published posts, and only triggers `deploy.yml` (via `workflow_dispatch`) when something actually changed — a quiet night costs one small API read, nothing more. Run it manually (Actions tab → "Check blog for updates" → Run workflow) instead of waiting for the schedule when a post needs to go live immediately. It compares post *counts*, not last-modified dates, so it catches a newly published (or unpublished) post but not an edit to the text of a post that was already published and stays published — that lands on the next push-triggered build regardless.
+
 ### Why build-time, not live
 
 An earlier version of this plan had the site query BraDypUS live, per pageview (like the original PHP site did). We moved to build-time generation because: this site is hosted on GitHub Pages, which is pure static file serving — there's no server to run a live query from. Querying BraDypUS straight from each visitor's browser was also considered and rejected: BraDypUS v5 requires an API key for *every* request (the old public API is gone), so a live-query approach would ship that key to every visitor's browser and hit the database on every single pageview. Building at commit time means the key only touches BraDypUS from GitHub's build runner, a handful of times, only when someone deliberately publishes an update — not from every visitor's browser on every page load.
@@ -62,31 +64,20 @@ You do **not** need to understand BraDypUS, Astro, or the taxonomy system to do 
 
 ### Publishing a new blog post
 
-The blog is expected to be the part of the site updated most often, independently of the rest — so here's the full recipe. Blog posts live in their own collection, **`src/content/blog/`**, separate from the general site pages in `src/content/articles/` (see "Project structure" below) — dropping a file in that one folder is the entire mechanism, there's no tag or flag to remember.
+The blog is the part of the site expected to change most often, and independently of everyone else's workflow — so, unlike every other page on this site, it is **not edited in this repository at all**. It lives in BraDypUS's `blog` table (app `ghazni`) and is fetched at build time exactly like finds/records — see `src/utils/blog.ts`.
 
-1. **Create a new file** at `src/content/blog/your-post-slug.mdx` — the filename becomes the post's URL (`/blog/your-post-slug`).
-2. **Frontmatter** at the top of the file, between `---` lines:
+1. **Add a record** to the `blog` table in the BraDypUS UI, with:
+   - `title` — required.
+   - `slug` — required, unique, lowercase letters/digits/hyphens only (`[a-z0-9-]{3,150}`). Becomes the post's URL: `/blog/{slug}` (and, matching the original site, also the bare `/{slug}`). Choose carefully — changing it later changes the post's URL.
+   - `body` — required. **Real Markdown** (headings, `**bold**`, `*italic*`, `[links](url)`, `![images](url)`, lists, …), not HTML.
+   - `summary` — optional, shown on the `/blog` listing card.
+   - `author`, `publish_date` — `publish_date` controls sort order (newest first) and the "Posted on …" line.
+   - `domain` — optional (`islamic` / `buddhist`); leave blank for a post that isn't specific to either.
+   - `status` — **`draft` until you're ready to publish**, then `published`. Only `published` posts are ever fetched by the site.
+2. **Attach images** to the same record (BraDypUS's normal file-attachment UI, not a separate upload elsewhere): the **first** attached file becomes the post's cover (shown on the `/blog` card and at the top of the post); every other attached image renders as a gallery below the post body. No cover is fine too — the card and page just show none. Reorder attachments in BraDypUS if you need a different file to be the cover.
+3. **Publish**: once `status` is `published`, the change goes live on the next rebuild — either the nightly check (see "Deploying a rebuild" above) or a manual run of it if you don't want to wait.
 
-   ```yaml
-   ---
-   id: 237
-   textid: "your-post-slug"
-   title: "Your post's title"
-   summary: "One or two sentences shown on the /blog listing card."
-   author: "Your name"
-   publish: "2026-09-13"
-   ---
-   ```
-
-   - `id`: a number **not used by any other file** in `src/content/articles/` *or* `src/content/blog/` — the two folders still share one image namespace (below). Check the highest existing one (currently 236) and pick the next free number.
-   - `textid`: must match the filename (without `.mdx`).
-   - `publish`: `"YYYY-MM-DD"`. Controls sort order (newest first) and is displayed as "Posted on …". Omit only for a post with no fixed date — it'll sort last.
-   - `author`: optional, displayed as "Posted by …".
-3. **Body**: everything below the closing `---` is the post's content — plain HTML tags (`<p>`, `<img>`, `<a>`, …) work directly, no Markdown syntax is required. Look at an existing post (e.g. `src/content/blog/a-treasure-of-lustrewares-from-ghazni.mdx`) for the style used throughout the site.
-4. **Images**:
-   - A cover photo for the `/blog` listing card: add `public/images/articles/800x600/237.jpg` (using the same `id` as the frontmatter). Optional — if missing, the card just shows no image.
-   - Any images inside the post body: put them under `public/images/articles/media/237/` and reference them with a plain `<img src="/images/articles/media/237/filename.jpg" />` tag in the body.
-5. **Publish**: commit and push to `main` as above — the site rebuilds and the new post appears on `/blog` and in the "Latest blog posts" sidebar of every other post.
+No git, no PR, no MDX — this is the one part of the site staff can publish to without touching this repository at all.
 
 ## For future maintainers: adding a taxonomy path or a new dataset
 
@@ -120,29 +111,40 @@ The original site's PHP `tmpldata.json` used a different, older query language (
 
 ```
 src/
-  content.config.ts       # Content collection schemas (articles, blog)
+  content.config.ts       # Content collection schema (articles)
   content/articles/*.mdx  # Static page text — see "For staff" above
-  content/blog/*.mdx      # Blog posts — see "Publishing a new blog post" above
   data/finds-taxonomy.json # The finds taxonomy — see "For future maintainers" above
   utils/
     bdus.ts                 # BraDypUS v5 API client (build-time only)
-    shortsql.ts               # ShortSQL -> v5 filter translator (migration-time only, see scripts/)
-    taxonomy.ts                 # Walks finds-taxonomy.json
-    recordIndex.ts                # inv_no -> canonical URL, for inline embeds and search
-    content.ts                      # articles+blog union, for the bare /{textid} catch-all route
-  components/finds/             # Taxonomy/record rendering (the BraDypUS-specific UI)
+    blog.ts                   # Fetches published posts from BraDypUS's `blog` table
+    markdown.ts                 # Renders a BraDypUS markdown field to HTML at build time
+    shortsql.ts                   # ShortSQL -> v5 filter translator (migration-time only, see scripts/)
+    taxonomy.ts                     # Walks finds-taxonomy.json
+    recordIndex.ts                    # inv_no -> canonical URL, for inline embeds and search
+  components/
+    finds/                     # Taxonomy/record rendering (the BraDypUS-specific UI)
+    BlogPostPage.astro           # Shared detail template for /blog/{slug} and bare /{slug}
   pages/                        # Routes — see [domain]/finds/[...path].astro for the taxonomy/record routing
   layouts/, styles/             # Site chrome — layout, navbar, palette
 public/
   images/css/, finds/, articles/  # Committed static assets (site design + article images)
-  images/bdus/                     # NOT committed — fetched fresh by `npm run fetch-images`
+  images/bdus/                     # NOT committed — fetched fresh by `npm run fetch-images` (finds AND blog images)
 scripts/
   migrate-articles.mjs        # One-time sqlite -> MDX migration (already run; kept for reference/audit)
-  migration-data/               # The sqlite export it ran against
+  migration-data/               # Source data + output for the one-time migration scripts below
   convert-taxonomy.mjs           # One-time ShortSQL -> native query cleanup of finds-taxonomy.json (already run)
   convert-article-queries.mjs     # Same, for the <FindsQuery> tags inside migrated articles (already run)
+  migrate-blog-to-bdus.mjs         # One-time MDX -> BraDypUS `blog` table migration — blocked by a BraDypUS-side
+                                    # bug (POST /api/record/{tb} failing via API-key auth, reported upstream),
+                                    # kept in case that gets fixed later; export-blog-for-import.mjs (below) is
+                                    # what was actually used
+  export-blog-for-import.mjs       # The workaround that was used instead: exports a CSV + zip of cover images
+                                    # for BraDypUS's own bulk-import UI (already run)
   fetch-images.mjs                 # Pre-build image downloader (see "How this site works")
 astro.config.mjs               # Registers the scms() integration
+.github/workflows/
+  deploy.yml                # Push-to-main -> build -> publish to Pages
+  check-blog-updates.yml      # Nightly check for new BraDypUS blog posts — see "Deploying a rebuild" above
 ```
 
 See the [s:CMS documentation](https://github.com/lad-sapienza/sCMS) for the framework's own components (`Gallery`, `Map`, `BSNavbar`, and more) used throughout this site's chrome and content.

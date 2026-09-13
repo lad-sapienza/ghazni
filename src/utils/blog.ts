@@ -22,10 +22,17 @@ export interface BlogPost {
   galleryFiles: { id: number; ext: string; description?: string }[];
 }
 
+const IMAGE_EXTS = new Set(['jpg', 'jpeg', 'png', 'webp', 'gif']);
+
 async function toBlogPost(record: any): Promise<BlogPost> {
   const core = record.core ?? {};
   const val = (name: string) => core[name]?.val;
-  const files: any[] = (record.files ?? []).filter((f: any) => f.is_image);
+  // `is_image` alone isn't reliable here — it's come back `false` for
+  // legitimate webp uploads (see scripts/fetch-images.mjs) — so also
+  // accept a recognized image extension.
+  const files: any[] = (record.files ?? []).filter(
+    (f: any) => f.is_image || IMAGE_EXTS.has(String(f.ext).toLowerCase())
+  );
   return {
     id: record.id,
     slug: val('slug'),

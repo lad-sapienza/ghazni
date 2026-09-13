@@ -1,0 +1,74 @@
+name: Check blog for updates
+
+# The blog (unlike the rest of this site) is edited directly in BraDypUS,
+# not via a git push — so nothing normally triggers deploy.yml when a new
+# post goes live. This runs nightly instead, and only actually triggers a
+# rebuild when something changed, so a quiet night costs nothing beyond one
+# small read from BraDypUS. workflow_dispatch is there for testing it, or
+# for triggering a check on demand instead of waiting for the schedule —
+# the same result as pushing to main, without needing a commit.
+#
+# Change detection is the count of published posts, not their last-modified
+# date — BraDypUS's own `updated_at` field isn't being populated reliably
+# yet (flagged upstream), so it can't be trusted here. This catches a newly
+# published (or unpublished) post; it does NOT catch an edit to a post
+# that was already published and stays published — that lands on the next
+# push-triggered build regardless, or run this workflow manually to force
+# an immediate rebuild.
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # 03:00 UTC every night — adjust as you like
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write # to trigger deploy.yml via `gh workflow run`
+
+concurrency:
+  group: check-blog-updates
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      # Keyed on the run id (always a cache miss) with a prefix restore-key,
+      # same trick as deploy.yml's BraDypUS image cache — picks up the most
+      # recent previous run's count and always saves a fresh one.
+      - name: Restore last-seen published post count
+        uses: actions/cache/restore@v4
+        with:
+          path: .blog-check-state
+          key: blog-check-state-${{ github.run_id }}
+          restore-keys: |
+            blog-check-state-
+
+      - name: Compare against BraDypUS's current published count
+        id: check
+        env:
+          BDUS_API_KEY: ${{ secrets.BDUS_API_KEY }}
+        run: |
+          mkdir -p .blog-check-state
+          previous=$(cat .blog-check-state/count 2>/dev/null || echo "-1")
+          current=$(curl -sf -X POST "https://bdus.lad-sapienza.it/ghazni/api/records/blog" \
+            -H "Authorization: Bearer $BDUS_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{"per_page":1,"page":1,"filter":{"status":{"_eq":"published"}}}' \
+            | node -e 'let d="";process.stdin.on("data",c=>d+=c);process.stdin.on("end",()=>console.log(JSON.parse(d).total))')
+          echo "Previous count: $previous — current count: $current"
+          echo "$current" > .blog-check-state/count
+          echo "changed=$([ "$previous" != "$current" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+      - name: Save current count for next run
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .blog-check-state
+          key: blog-check-state-${{ github.run_id }}
+
+      - name: Trigger a rebuild
+        if: steps.check.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --repo ${{ github.repository }}
