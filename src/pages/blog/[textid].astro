@@ -1,43 +1,14 @@
 ---
-import { getCollection, render } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogPostPage from '../../components/BlogPostPage.astro';
+import { listPublishedPosts } from '../../utils/blog';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts.map((entry) => ({ params: { textid: entry.data.textid }, props: { entry } }));
+  const posts = await listPublishedPosts();
+  const latestPosts = posts.slice(0, 5);
+  return posts.map((post) => ({ params: { textid: post.slug }, props: { post, latestPosts } }));
 }
 
-const { entry } = Astro.props;
-const { Content } = await render(entry);
-
-const allPosts = (await getCollection('blog'))
-  .sort((a, b) => (b.data.publish ?? '').localeCompare(a.data.publish ?? ''))
-  .slice(0, 5);
+const { post, latestPosts } = Astro.props;
 ---
 
-<BaseLayout title={entry.data.title} description={entry.data.summary}>
-  <div class="container my-5 py-5">
-    <div class="row">
-      <div class="col-sm-8">
-        <h1>{entry.data.title}</h1>
-        <p class="text-secondary border-top border-bottom py-2 mt-3 mb-5">
-          Posted{entry.data.author && ` by ${entry.data.author}`}{entry.data.publish && ` on ${entry.data.publish}`}
-        </p>
-        <div><Content /></div>
-      </div>
-      <div class="col-sm-3 text-end">
-        <h5>Latest blog posts</h5>
-        <ul class="list-unstyled">
-          {allPosts.map((p) => (
-            <li class="border-bottom my-3 pb-2">
-              <a href={`/blog/${p.data.textid}`} title={p.data.title}>{p.data.title}</a><br />
-              <span class="text-secondary">
-                [Posted{p.data.author && ` by ${p.data.author}`}{p.data.publish && ` on ${p.data.publish}`}]
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  </div>
-</BaseLayout>
+<BlogPostPage post={post} latestPosts={latestPosts} />

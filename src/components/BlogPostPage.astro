@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Gallery from '@lad-sapienza/scms-core/components/Gallery/Gallery.astro';
+import { localFileUrl, localFileDimensions } from '../utils/localImages';
+import type { BlogPost } from '../utils/blog';
+
+interface Props {
+  post: BlogPost;
+  /** For the "Latest blog posts" sidebar — already capped by the caller. */
+  latestPosts: BlogPost[];
+}
+const { post, latestPosts } = Astro.props;
+
+function postedLine(p: BlogPost) {
+  return `Posted${p.author ? ` by ${p.author}` : ''}${p.publishDate ? ` on ${p.publishDate}` : ''}`;
+}
+
+function toGalleryImage(f: { id: number; ext: string; description?: string }) {
+  const src = localFileUrl(f.id, f.ext);
+  const { width, height } = localFileDimensions(f.id, f.ext);
+  return { src, thumb: src, width, height, alt: f.description ?? post.title };
+}
+const galleryImages = post.galleryFiles.map(toGalleryImage);
+---
+
+<BaseLayout title={post.title} description={post.summary} domain={post.domain}>
+  <div class="container my-5 py-5">
+    <div class="row">
+      <div class="col-sm-8">
+        <h1>{post.title}</h1>
+        <p class="text-secondary border-top border-bottom py-2 mt-3 mb-5">{postedLine(post)}</p>
+        {post.coverFile && (
+          <img
+            src={localFileUrl(post.coverFile.id, post.coverFile.ext)}
+            class="img-fluid mb-4"
+            alt={post.title}
+          />
+        )}
+        <div set:html={post.bodyHtml} />
+        {galleryImages.length > 0 && (
+          <div class="mt-5">
+            <Gallery images={galleryImages} columns={{ min: 200, max: 3 }} />
+          </div>
+        )}
+      </div>
+      <div class="col-sm-3 text-end">
+        <h5>Latest blog posts</h5>
+        <ul class="list-unstyled">
+          {latestPosts.map((p) => (
+            <li class="border-bottom my-3 pb-2">
+              <a href={`/blog/${p.slug}`} title={p.title}>{p.title}</a><br />
+              <span class="text-secondary">[{postedLine(p)}]</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

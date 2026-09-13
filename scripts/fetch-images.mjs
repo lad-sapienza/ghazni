@@ -62,6 +62,10 @@ const taxonomyQueries = [
 ].filter(Boolean);
 await collectFromQueries(taxonomyQueries);
 
+// 1b. Every published blog post (src/utils/blog.ts fetches the same table
+// the same way — its cover + gallery images need to already be here).
+await collectFromQueries([{ tb: 'blog', filter: { status: { _eq: 'published' } } }]);
+
 // 2. Every inline data embed, `<FindsQuery query={...} />` in the migrated MDX
 // (was [[browseData]]...[[/browseData]] in the original site). The query
 // object can nest (filter._and/._or), so a non-greedy regex would truncate
