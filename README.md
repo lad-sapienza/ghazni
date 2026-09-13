@@ -62,9 +62,9 @@ You do **not** need to understand BraDypUS, Astro, or the taxonomy system to do 
 
 ### Publishing a new blog post
 
-The blog is expected to be the part of the site updated most often, independently of the rest — so here's the full recipe. A blog post is just an article (see above) tagged `"blog"`; there is no separate blog system.
+The blog is expected to be the part of the site updated most often, independently of the rest — so here's the full recipe. Blog posts live in their own collection, **`src/content/blog/`**, separate from the general site pages in `src/content/articles/` (see "Project structure" below) — dropping a file in that one folder is the entire mechanism, there's no tag or flag to remember.
 
-1. **Create a new file** at `src/content/articles/your-post-slug.mdx` — the filename becomes the post's URL (`/blog/your-post-slug`).
+1. **Create a new file** at `src/content/blog/your-post-slug.mdx` — the filename becomes the post's URL (`/blog/your-post-slug`).
 2. **Frontmatter** at the top of the file, between `---` lines:
 
    ```yaml
@@ -73,18 +73,16 @@ The blog is expected to be the part of the site updated most often, independentl
    textid: "your-post-slug"
    title: "Your post's title"
    summary: "One or two sentences shown on the /blog listing card."
-   tags: ["blog"]
    author: "Your name"
    publish: "2026-09-13"
    ---
    ```
 
-   - `id`: a number **not used by any other file** in `src/content/articles/` — check the highest existing one (currently 236) and pick the next free number. It's only used to namespace this post's own images (below), not for routing.
+   - `id`: a number **not used by any other file** in `src/content/articles/` *or* `src/content/blog/` — the two folders still share one image namespace (below). Check the highest existing one (currently 236) and pick the next free number.
    - `textid`: must match the filename (without `.mdx`).
-   - `tags`: must include `"blog"` — this is what makes the post appear on `/blog` and in the "Latest blog posts" sidebar. A post can carry extra tags too (e.g. `["blog", "islamic"]`) if it should also show up elsewhere.
    - `publish`: `"YYYY-MM-DD"`. Controls sort order (newest first) and is displayed as "Posted on …". Omit only for a post with no fixed date — it'll sort last.
    - `author`: optional, displayed as "Posted by …".
-3. **Body**: everything below the closing `---` is the post's content — plain HTML tags (`<p>`, `<img>`, `<a>`, …) work directly, no Markdown syntax is required. Look at an existing post (e.g. `src/content/articles/a-treasure-of-lustrewares-from-ghazni.mdx`) for the style used throughout the site.
+3. **Body**: everything below the closing `---` is the post's content — plain HTML tags (`<p>`, `<img>`, `<a>`, …) work directly, no Markdown syntax is required. Look at an existing post (e.g. `src/content/blog/a-treasure-of-lustrewares-from-ghazni.mdx`) for the style used throughout the site.
 4. **Images**:
    - A cover photo for the `/blog` listing card: add `public/images/articles/800x600/237.jpg` (using the same `id` as the frontmatter). Optional — if missing, the card just shows no image.
    - Any images inside the post body: put them under `public/images/articles/media/237/` and reference them with a plain `<img src="/images/articles/media/237/filename.jpg" />` tag in the body.
@@ -122,14 +120,16 @@ The original site's PHP `tmpldata.json` used a different, older query language (
 
 ```
 src/
-  content.config.ts       # Content collection schema (articles)
+  content.config.ts       # Content collection schemas (articles, blog)
   content/articles/*.mdx  # Static page text — see "For staff" above
+  content/blog/*.mdx      # Blog posts — see "Publishing a new blog post" above
   data/finds-taxonomy.json # The finds taxonomy — see "For future maintainers" above
   utils/
     bdus.ts                 # BraDypUS v5 API client (build-time only)
     shortsql.ts               # ShortSQL -> v5 filter translator (migration-time only, see scripts/)
     taxonomy.ts                 # Walks finds-taxonomy.json
     recordIndex.ts                # inv_no -> canonical URL, for inline embeds and search
+    content.ts                      # articles+blog union, for the bare /{textid} catch-all route
   components/finds/             # Taxonomy/record rendering (the BraDypUS-specific UI)
   pages/                        # Routes — see [domain]/finds/[...path].astro for the taxonomy/record routing
   layouts/, styles/             # Site chrome — layout, navbar, palette

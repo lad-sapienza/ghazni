@@ -3,15 +3,14 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
-  const posts = (await getCollection('articles')).filter((a) => a.data.tags.includes('blog'));
+  const posts = await getCollection('blog');
   return posts.map((entry) => ({ params: { textid: entry.data.textid }, props: { entry } }));
 }
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 
-const allPosts = (await getCollection('articles'))
-  .filter((a) => a.data.tags.includes('blog'))
+const allPosts = (await getCollection('blog'))
   .sort((a, b) => (b.data.publish ?? '').localeCompare(a.data.publish ?? ''))
   .slice(0, 5);
 ---
