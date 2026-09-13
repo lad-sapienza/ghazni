@@ -46,7 +46,7 @@ on:
 
 That's the only change needed — the existing job already does a full `npm run build` from live data. Remove the `schedule:` block again once things go quiet — there's no harm in a period with both push-triggered and scheduled builds overlapping, `concurrency:` in the workflow already prevents overlapping runs.
 
-**The blog is the one exception** — since posts are published directly in BraDypUS, not via a git push, nothing above would ever pick up a new one on its own. `.github/workflows/check-blog-updates.yml` runs nightly, checks BraDypUS for a change in the number of published posts, and only triggers `deploy.yml` (via `workflow_dispatch`) when something actually changed — a quiet night costs one small API read, nothing more. Run it manually (Actions tab → "Check blog for updates" → Run workflow) instead of waiting for the schedule when a post needs to go live immediately. It compares post *counts*, not last-modified dates, so it catches a newly published (or unpublished) post but not an edit to the text of a post that was already published and stays published — that lands on the next push-triggered build regardless.
+**The blog is the one exception** — since posts are published directly in BraDypUS, not via a git push, nothing above would ever pick up a new post, or an edit to one, on its own. `.github/workflows/check-blog-updates.yml` runs nightly, checks the latest `updated_at` across published posts (`scripts/check-blog-freshness.mjs`), and only triggers `deploy.yml` (via `workflow_dispatch`) when it actually changed — a quiet night costs one small round of BraDypUS reads, nothing more. Run it manually (Actions tab → "Check blog for updates" → Run workflow) instead of waiting for the schedule when a post needs to go live immediately.
 
 ### Why build-time, not live
 
@@ -141,10 +141,11 @@ scripts/
   export-blog-for-import.mjs       # The workaround that was used instead: exports a CSV + zip of cover images
                                     # for BraDypUS's own bulk-import UI (already run)
   fetch-images.mjs                 # Pre-build image downloader (see "How this site works")
+  check-blog-freshness.mjs           # Used by check-blog-updates.yml (below) — not part of the site build
 astro.config.mjs               # Registers the scms() integration
 .github/workflows/
   deploy.yml                # Push-to-main -> build -> publish to Pages
-  check-blog-updates.yml      # Nightly check for new BraDypUS blog posts — see "Deploying a rebuild" above
+  check-blog-updates.yml      # Nightly check for new/edited BraDypUS blog posts — see "Deploying a rebuild" above
 ```
 
 See the [s:CMS documentation](https://github.com/lad-sapienza/sCMS) for the framework's own components (`Gallery`, `Map`, `BSNavbar`, and more) used throughout this site's chrome and content.

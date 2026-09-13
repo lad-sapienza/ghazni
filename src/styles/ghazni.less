@@ -23,6 +23,20 @@
   --bs-link-hover-color: darken(@primary, 10%);
 }
 
+// Bootstrap 5's own default gutter (--bs-gutter-x: 1.5rem, i.e. 12px each
+// side of .container) reads as basically no margin at all on a phone
+// screen, next to a heading/body text set at normal reading size — bump it
+// only below the sm breakpoint, where it matters most. Targets .container
+// and .row directly, not :root — Bootstrap's compiled CSS redeclares
+// --bs-gutter-x: 1.5rem directly on those same selectors (so it can be
+// scoped per-component), which shadows a :root-level override entirely.
+@media (max-width: 575.98px) {
+  .container,
+  .row {
+    --bs-gutter-x: 2rem;
+  }
+}
+
 /* Nav is sticky, not fixed — it still occupies its normal flow position,
    so (unlike the original site's truly `fixed-top` nav) there's nothing to
    compensate for here. An earlier version of this rule assumed otherwise
@@ -223,7 +237,12 @@ nav.navbar.ghazni-nav {
       font-size: 1.5rem;
     }
     img {
-      max-width: 400px;
+      // min(), not a plain max-width: a plain value here competes with
+      // img-fluid's own max-width:100% instead of combining with it — CSS
+      // takes whichever one wins the cascade, not the smaller of the two —
+      // so on a narrow viewport this could stop the image shrinking to fit
+      // (see the same bug just found and fixed on .blog-item img, below).
+      max-width: min(400px, 100%);
     }
   }
 
@@ -308,8 +327,13 @@ nav.navbar.ghazni-nav {
     // 1400px viewports (Bootstrap 4's, on the original site, tops out at
     // 1140px), so the cover kept growing past a sensible size on wide
     // desktops. Cap it instead of chasing the old framework's breakpoints.
+    //
+    // min(), not a plain max-width: a plain value competes with img-fluid's
+    // own max-width:100% instead of combining with it, so on a mobile
+    // column narrower than 420px the image stopped shrinking to fit and
+    // overflowed its card instead.
     img {
-      max-width: 420px;
+      max-width: min(420px, 100%);
     }
   }
 }
