@@ -60,6 +60,36 @@ You do **not** need to understand BraDypUS, Astro, or the taxonomy system to do 
 
 **To publish your change**: commit it and push to `main` (or ask whoever manages the repo to). That triggers a rebuild automatically — see "Deploying a rebuild" above. Expect the live site to update within a few minutes of pushing.
 
+### Publishing a new blog post
+
+The blog is expected to be the part of the site updated most often, independently of the rest — so here's the full recipe. A blog post is just an article (see above) tagged `"blog"`; there is no separate blog system.
+
+1. **Create a new file** at `src/content/articles/your-post-slug.mdx` — the filename becomes the post's URL (`/blog/your-post-slug`).
+2. **Frontmatter** at the top of the file, between `---` lines:
+
+   ```yaml
+   ---
+   id: 237
+   textid: "your-post-slug"
+   title: "Your post's title"
+   summary: "One or two sentences shown on the /blog listing card."
+   tags: ["blog"]
+   author: "Your name"
+   publish: "2026-09-13"
+   ---
+   ```
+
+   - `id`: a number **not used by any other file** in `src/content/articles/` — check the highest existing one (currently 236) and pick the next free number. It's only used to namespace this post's own images (below), not for routing.
+   - `textid`: must match the filename (without `.mdx`).
+   - `tags`: must include `"blog"` — this is what makes the post appear on `/blog` and in the "Latest blog posts" sidebar. A post can carry extra tags too (e.g. `["blog", "islamic"]`) if it should also show up elsewhere.
+   - `publish`: `"YYYY-MM-DD"`. Controls sort order (newest first) and is displayed as "Posted on …". Omit only for a post with no fixed date — it'll sort last.
+   - `author`: optional, displayed as "Posted by …".
+3. **Body**: everything below the closing `---` is the post's content — plain HTML tags (`<p>`, `<img>`, `<a>`, …) work directly, no Markdown syntax is required. Look at an existing post (e.g. `src/content/articles/a-treasure-of-lustrewares-from-ghazni.mdx`) for the style used throughout the site.
+4. **Images**:
+   - A cover photo for the `/blog` listing card: add `public/images/articles/800x600/237.jpg` (using the same `id` as the frontmatter). Optional — if missing, the card just shows no image.
+   - Any images inside the post body: put them under `public/images/articles/media/237/` and reference them with a plain `<img src="/images/articles/media/237/filename.jpg" />` tag in the body.
+5. **Publish**: commit and push to `main` as above — the site rebuilds and the new post appears on `/blog` and in the "Latest blog posts" sidebar of every other post.
+
 ## For future maintainers: adding a taxonomy path or a new dataset
 
 The "finds" taxonomy (Alabaster, Marble, Dado panels, …) lives in **`src/data/finds-taxonomy.json`**. Each node is:
