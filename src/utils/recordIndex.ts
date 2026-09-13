@@ -14,7 +14,20 @@
 import { flattenDomain } from './taxonomy.ts';
 import { bdusListAll } from './bdus.ts';
 
-const invNoToUrl = new Map<string, string>();
+interface IndexEntry {
+  url: string;
+  /** e.g. "Islamic Ghazni — Alabaster" — the taxonomy category label, for search-result context (no extra API cost: piggybacks on the list query already needed for the URL). */
+  label: string;
+  /** Preview object/material text (whichever the list endpoint returned), if any — e.g. "Mould". */
+  detail?: string;
+}
+
+const domainLabel: Record<'islamic' | 'buddhist', string> = {
+  islamic: 'Islamic Ghazni',
+  buddhist: 'Buddhist Ghazni',
+};
+
+const invNoToEntry = new Map<string, IndexEntry>();
 
 async function indexDomain(domain: 'islamic' | 'buddhist') {
   const nodes = flattenDomain(domain);
@@ -28,8 +41,12 @@ async function indexDomain(domain: 'islamic' | 'buddhist') {
     });
     const base = `/${domain}/finds/${parts.join('/')}`;
     for (const row of rows) {
-      if (!invNoToUrl.has(row.inv_no)) {
-        invNoToUrl.set(row.inv_no, `${base}/record/${encodeURIComponent(row.inv_no)}`);
+      if (!invNoToEntry.has(row.inv_no)) {
+        invNoToEntry.set(row.inv_no, {
+          url: `${base}/record/${encodeURIComponent(row.inv_no)}`,
+          label: `${domainLabel[domain]} — ${node.label}`,
+          detail: row.object || row.main_material || undefined,
+        });
       }
     }
   }
@@ -39,10 +56,10 @@ await Promise.all([indexDomain('islamic'), indexDomain('buddhist')]);
 
 /** Canonical detail-page URL for a find's inv_no, or undefined if it isn't published in any taxonomy category. */
 export function findUrl(invNo: string): string | undefined {
-  return invNoToUrl.get(invNo);
+  return invNoToEntry.get(invNo)?.url;
 }
 
-/** Every published find as {invNo, url} — backs the static client-side search index. */
-export function allFindUrls(): { invNo: string; url: string }[] {
-  return Array.from(invNoToUrl.entries()).map(([invNo, url]) => ({ invNo, url }));
+/** Every published find, with enough context for a meaningful search result — backs the static client-side search index. */
+export function allFindEntries(): (IndexEntry & { invNo: string })[] {
+  return Array.from(invNoToEntry.entries()).map(([invNo, entry]) => ({ invNo, ...entry }));
 }

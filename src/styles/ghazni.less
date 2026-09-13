@@ -10,6 +10,11 @@
 @gray: #efebe9;
 @gray-light: #f2f1f0;
 @primary: @teal-darken-4;
+// Where the nav switches from the full menu row to the toggler+collapsed
+// menu — later than Bootstrap's own default (md, 768px) or BSNavbar's
+// hard-coded navbar-expand-md, deliberately: see the nav.ghazni-nav rule
+// that overrides it, below.
+@nav-collapse-bp: 1200px;
 
 :root {
   --bs-primary: @primary;
@@ -18,12 +23,10 @@
   --bs-link-hover-color: darken(@primary, 10%);
 }
 
-body {
-  padding-top: 4.5rem;
-}
-body.is-home {
-  padding-top: 0;
-}
+/* Nav is sticky, not fixed — it still occupies its normal flow position,
+   so (unlike the original site's truly `fixed-top` nav) there's nothing to
+   compensate for here. An earlier version of this rule assumed otherwise
+   and left a permanent blank strip above the header on every page. */
 
 h1,
 h2,
@@ -104,6 +107,58 @@ nav.navbar.ghazni-nav {
       }
     }
   }
+
+  // Reserves room on the right of the menu row for .ghazni-search, which is
+  // absolutely positioned over this same bar — without this the (left-
+  // aligned, per the current design) menu's own right-pushed items and the
+  // search box overlap. Only above @nav-collapse-bp, where the menu is a
+  // single row and the search box floats over it; below it BSNavbar is
+  // behind a toggler instead, and .ghazni-search sits next to that toggler
+  // (see below) rather than needing this reserved space.
+  @media (min-width: @nav-collapse-bp) {
+    .container {
+      padding-right: 12rem;
+    }
+  }
+
+  // BSNavbar hard-codes navbar-expand-md (Bootstrap's own 768px breakpoint)
+  // — with the site's actual (English, sometimes long: "Italian
+  // Archaeological Mission") menu labels plus the reserved search space
+  // above, that collapses too late and the single-row menu wraps into a
+  // multi-line mess before BSNavbar's own toggler ever kicks in. This
+  // overrides Bootstrap's forced-visible .navbar-expand-md rule to keep the
+  // toggler in charge up to @nav-collapse-bp instead — a later, and
+  // deliberately different, cutoff than the 12rem-reservation query above,
+  // since a collapsed menu doesn't need that reserved space at all.
+  @media (min-width: 768px) and (max-width: (@nav-collapse-bp - 1px)) {
+    .navbar-collapse {
+      display: none !important;
+      &.show {
+        display: flex !important;
+      }
+    }
+    .navbar-toggler {
+      display: block !important;
+    }
+  }
+}
+
+// Positioning context for .ghazni-search, sized/centered identically to
+// BSNavbar's own internal .container at every breakpoint (both are plain
+// .container divs, so max-width + auto margins resolve the same way) — see
+// the comment in Navbar.astro. Using this instead of the full-bleed
+// .ghazni-nav-wrap keeps .ghazni-search's offset locked to the
+// toggler/menu regardless of how wide the container's own gutter is at a
+// given viewport width.
+// Pinned to the wrap's top edge (rather than left in normal flow, where it
+// would render as its own row below the navbar) via absolute positioning
+// spanning the full width — .container's max-width/auto-margins still
+// center it the same as a block-level container would.
+.ghazni-search-slot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
 .ghazni-search {
@@ -113,12 +168,21 @@ nav.navbar.ghazni-nav {
   z-index: 1031;
 
   input[type='search'] {
-    min-width: 10rem;
+    width: 9rem;
   }
 
-  @media (max-width: 991.98px) {
-    position: static;
-    padding: 0 1rem 0.75rem;
+  // Whenever the toggler button is showing (i.e. below @nav-collapse-bp —
+  // both BSNavbar's own default collapsed range below 768px, and the
+  // override above extending that up to @nav-collapse-bp), sit just to its
+  // left in the same row instead of the menu's usual right edge.
+  @media (max-width: (@nav-collapse-bp - 1px)) {
+    right: 3.5rem;
+  }
+
+  @media (max-width: 420px) {
+    input[type='search'] {
+      width: 7rem;
+    }
   }
 }
 
@@ -127,6 +191,7 @@ nav.navbar.ghazni-nav {
   background-color: @gray;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+  margin-bottom: 3rem;
 
   ol.breadcrumb {
     background-color: transparent;

@@ -22,14 +22,22 @@ const currentPath = Astro.url.pathname;
   />
 
   {!isHome && (
-    <form class="ghazni-search" action="#" id="search_db">
-      <input
-        type="search"
-        placeholder="Search by inventory"
-        class="form-control form-control-sm"
-        id="input_search_db"
-      />
-    </form>
+    // A plain Bootstrap .container, so it tracks the exact same width/
+    // centering as BSNavbar's own internal .container at every breakpoint
+    // (see ghazni.less .ghazni-search — anchoring to the full-bleed wrap
+    // instead of this used a fixed offset from the *viewport* edge, which
+    // drifted out of sync with the toggler whenever the two containers'
+    // gutters differed, e.g. just below @nav-collapse-bp).
+    <div class="container ghazni-search-slot">
+      <form class="ghazni-search" action="#" id="search_db">
+        <input
+          type="search"
+          placeholder="Search by inventory"
+          class="form-control form-control-sm"
+          id="input_search_db"
+        />
+      </form>
+    </div>
   )}
 </div>
 

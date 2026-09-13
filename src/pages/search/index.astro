@@ -3,35 +3,75 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Search">
-  <div class="container mb-5">
-    <h2>Search for <code id="search-term"></code></h2>
-    <ul id="search-results" class="list-unstyled"></ul>
-    <p id="search-empty" hidden>No record found!</p>
+  <div class="submenu">
+    <div class="container">
+      <h1>Search results for <span id="search-term" class="fw-normal"></span></h1>
+    </div>
+  </div>
+
+  <div class="container my-5">
+    <p id="search-count" class="text-secondary"></p>
+    <ul id="search-results" class="list-unstyled search-results"></ul>
+    <p id="search-empty" hidden>No record found for this inventory number.</p>
   </div>
 </BaseLayout>
 
+<style>
+  .search-results li {
+    border-bottom: 1px solid var(--bs-border-color);
+    padding: 0.85rem 0;
+  }
+  .search-results li:first-child {
+    border-top: 1px solid var(--bs-border-color);
+  }
+  .search-results a {
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+  .search-results .category {
+    color: var(--bs-secondary-color);
+  }
+</style>
+
 <script>
+  interface Entry {
+    invNo: string;
+    url: string;
+    label: string;
+    detail?: string;
+  }
+
   const params = new URLSearchParams(location.search);
-  const q = (params.get('q') ?? '').trim().toLowerCase();
-  document.getElementById('search-term')!.textContent = q;
+  const q = (params.get('q') ?? '').trim();
+  document.getElementById('search-term')!.textContent = q ? `"${q}"` : '';
 
   if (q) {
     fetch('/data/finds-index.json')
       .then((r) => r.json())
-      .then((index: { invNo: string; url: string }[]) => {
-        const matches = index.filter((r) => r.invNo.toLowerCase().includes(q));
+      .then((index: Entry[]) => {
+        const needle = q.toLowerCase();
+        const matches = index.filter((r) => r.invNo.toLowerCase().includes(needle));
         const list = document.getElementById('search-results')!;
         const empty = document.getElementById('search-empty')!;
+        const count = document.getElementById('search-count')!;
+
         if (matches.length === 0) {
           empty.hidden = false;
           return;
         }
+
+        count.textContent = `Showing ${matches.length} record${matches.length === 1 ? '' : 's'}`;
+
         for (const m of matches) {
           const li = document.createElement('li');
           const a = document.createElement('a');
           a.href = m.url;
           a.textContent = m.invNo;
           li.appendChild(a);
+          const meta = document.createElement('div');
+          meta.className = 'category';
+          meta.textContent = m.detail ? `${m.label} — ${m.detail}` : m.label;
+          li.appendChild(meta);
           list.appendChild(li);
         }
       });
