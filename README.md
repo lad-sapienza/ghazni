@@ -56,7 +56,7 @@ An earlier version of this plan had the site query BraDypUS live, per pageview (
 
 You do **not** need to understand BraDypUS, Astro, or the taxonomy system to do this.
 
-**To change the text of a page** (the project description, a blog post, "About the mission", etc.): find the matching file under `src/content/articles/*.mdx` — the filename is the page's URL (e.g. `archaeological-mission.mdx` is the `/archaeological-mission` page). Open it, edit the text between the `---` frontmatter block and the end of the file, save. Leave anything that looks like `<Something ... />` alone — those are live embeds (an image gallery, a 3D model viewer, a search box pulling from the database) — editing the surrounding text is safe, editing those tags is not.
+**To change the text of a standalone page** (the project description, "About the mission", "Contact us", etc.): find the matching file under `src/content/articles/*.mdx` — the filename is the page's URL (e.g. `archaeological-mission.mdx` is the `/archaeological-mission` page). Open it, edit the text between the `---` frontmatter block and the end of the file, save. Leave anything that looks like `<Something ... />` alone — those are live embeds (an image gallery, a 3D model viewer, a search box pulling from the database) — editing the surrounding text is safe, editing those tags is not. **The text shown above a finds-taxonomy category's grid** (e.g. the paragraph above the records on `/islamic/finds/marble/arches`) is NOT one of these files — see "Editing a finds-taxonomy category's intro text" below.
 
 **To swap a photo used in the site's own design** (a logo, a section background, the homepage photos) — as opposed to a find/record photo, which comes from BraDypUS itself and is edited there, not here: replace the file under `public/images/css/` with a new one **of the same filename**. Nothing else needs to change.
 
@@ -78,6 +78,21 @@ The blog is the part of the site expected to change most often, and independentl
 3. **Publish**: once `status` is `published`, the change goes live on the next rebuild — either the nightly check (see "Deploying a rebuild" above) or a manual run of it if you don't want to wait.
 
 No git, no PR, no MDX — this is the one part of the site staff can publish to without touching this repository at all.
+
+### Editing a finds-taxonomy category's intro text
+
+The paragraph shown above a category's records grid (e.g. on `/islamic/finds/marble/arches`) lives in BraDypUS's `finds_categories` table (app `ghazni`), fetched at build time — see `src/utils/findsCategories.ts`. It moved out of `src/content/articles/*.mdx` because it's not a one-off page: it's tightly coupled 1:1 to a node in `src/data/finds-taxonomy.json` (same `node_id` as the node's own `id`), and there were 147 of them, making git/PR editing needlessly heavy for text this formulaic.
+
+1. **Edit or add a record** in the `finds_categories` table, with:
+   - `node_id` — required, unique, must match a node `id` in `src/data/finds-taxonomy.json` exactly, or the text will never be picked up.
+   - `domain` — `islamic` or `buddhist`.
+   - `title` — shown nowhere on the live page (the taxonomy node's own `label` is what's actually displayed) but required by BraDypUS and useful for finding the right row in its admin UI — keep it matching the node's `label`.
+   - `summary` — optional, used as the page's meta description.
+   - `body` — **real Markdown**, not HTML (same convention as the blog's `body`). Don't add a "Records" heading or embed a `<FindsQuery>` here — the grid below is already rendered separately, from the taxonomy node's own `query`.
+   - `status` — `draft` until ready, then `published`.
+2. **Publish**: goes live on the next rebuild, same as everything else build-time (see "Deploying a rebuild" above) — no git, no PR.
+
+A category with no matching `finds_categories` row just shows its grid with no intro text above it — that's a normal, supported state (see `scripts/export-finds-categories-for-import.mjs`, which bulk-populated the initial 147 rows from what used to be static MDX).
 
 ## For future maintainers: adding a taxonomy path or a new dataset
 
@@ -102,6 +117,7 @@ The "finds" taxonomy (Alabaster, Marble, Dado panels, …) lives in **`src/data/
 - A node with `"items": { ... }` is a category with subcategories (renders as a tile grid).
 - A node with `"query": { ... }` instead is a leaf (renders a grid of matching finds). `query` is BraDypUS v5's own filter syntax (documented at [docs.bdus.lad-sapienza.it](https://docs.bdus.lad-sapienza.it) — look for `/api/records/{tb}`'s Directus-style `filter`) — **to add a new category, add a new node with a `query` in that same syntax** (copy a sibling and adjust the field/value) — you don't need to touch any component code. A node can instead carry `"message": "..."` for a category that exists in the taxonomy but has no published content yet (shown as plain text instead of a grid).
 - A leaf's thumbnail images live at `public/images/finds/{domain}/{path}/{id}.jpg` (the category node's own `id`, not a find's own photo) — add one when you add a category, or it'll show a broken image.
+- Every node's own `id` also gets a static redirect, `/{id}` -> its canonical `/{domain}/finds/...` path, computed in `astro.config.mjs` straight from this file — nothing to do when adding a node, it's automatic. (This exists for URL compatibility with the original PHP site, which served these same category pages at a bare, un-nested URL too.)
 
 The original site's PHP `tmpldata.json` used a different, older query language (BraDypUS v4's "ShortSQL") instead of `query`. This file started as that same file with ShortSQL translated to v5's syntax — `src/utils/shortsql.ts` is the (still-present, but no longer used at build time) translator that did it, along with `scripts/convert-taxonomy.mjs` and `scripts/convert-article-queries.mjs`, kept for reference. There should be no reason to reach for ShortSQL again — v5's own filter syntax is the current, documented one.
 
@@ -112,15 +128,16 @@ The original site's PHP `tmpldata.json` used a different, older query language (
 ```
 src/
   content.config.ts       # Content collection schema (articles)
-  content/articles/*.mdx  # Static page text — see "For staff" above
+  content/articles/*.mdx  # Static, hand-maintained page text (standalone pages only — see "For staff" above)
   data/finds-taxonomy.json # The finds taxonomy — see "For future maintainers" above
   utils/
     bdus.ts                 # BraDypUS v5 API client (build-time only)
     blog.ts                   # Fetches published posts from BraDypUS's `blog` table
-    markdown.ts                 # Renders a BraDypUS markdown field to HTML at build time
-    shortsql.ts                   # ShortSQL -> v5 filter translator (migration-time only, see scripts/)
-    taxonomy.ts                     # Walks finds-taxonomy.json
-    recordIndex.ts                    # inv_no -> canonical URL, for inline embeds and search
+    findsCategories.ts          # Fetches finds-taxonomy category intros from BraDypUS's `finds_categories` table
+    markdown.ts                   # Renders a BraDypUS markdown field to HTML at build time
+    shortsql.ts                     # ShortSQL -> v5 filter translator (migration-time only, see scripts/)
+    taxonomy.ts                       # Walks finds-taxonomy.json
+    recordIndex.ts                      # inv_no -> canonical URL, for inline embeds and search
   components/
     finds/                     # Taxonomy/record rendering (the BraDypUS-specific UI)
     BlogPostPage.astro           # Shared detail template for /blog/{slug} and bare /{slug}
@@ -134,6 +151,16 @@ scripts/
   migration-data/               # Source data + output for the one-time migration scripts below
   convert-taxonomy.mjs           # One-time ShortSQL -> native query cleanup of finds-taxonomy.json (already run)
   convert-article-queries.mjs     # Same, for the <FindsQuery> tags inside migrated articles (already run)
+  convert-articles-html-to-md.mjs  # One-time cleanup: rewrote the migrated articles' HTML to plain Markdown
+                                     # in place (already run) — skipped research-team.mdx and
+                                     # geometric-patterns.mdx, whose Bootstrap grid markup Markdown can't
+                                     # express; a handful of other files still carry a raw <a>/<img> where an
+                                     # attribute (target, rel, style, title) had no Markdown equivalent
+  export-finds-categories-for-import.mjs # One-time: exported the 147 finds-taxonomy container articles
+                                     # (see "Editing a finds-taxonomy category's intro text" above) as a
+                                     # CSV, bulk-imported into BraDypUS's new `finds_categories` table by
+                                     # hand — the record-create API endpoint fails the same way described
+                                     # below for blog (already run; those 147 .mdx files were then deleted)
   migrate-blog-to-bdus.mjs         # One-time MDX -> BraDypUS `blog` table migration — blocked by a BraDypUS-side
                                     # bug (POST /api/record/{tb} failing via API-key auth, reported upstream),
                                     # kept in case that gets fixed later; export-blog-for-import.mjs (below) is

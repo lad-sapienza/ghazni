@@ -8,6 +8,7 @@ import Breadcrumbs from './Breadcrumbs.astro';
 import CategoryTiles from './CategoryTiles.astro';
 import FindsGrid from './FindsGrid.astro';
 import { bdusQueryFull } from '../../utils/bdus';
+import { findsCategoriesByNodeId } from '../../utils/findsCategories';
 import type { TaxonomyNode } from '../../utils/taxonomy';
 
 interface Props {
@@ -30,8 +31,7 @@ if (parts.length === 0) {
   if (entry) SectionIntro = (await render(entry)).Content;
 }
 
-const nodeArticle = byTextid.get(node.id);
-const NodeIntro = nodeArticle ? (await render(nodeArticle)).Content : undefined;
+const nodeCategory = (await findsCategoriesByNodeId()).get(node.id);
 
 const basePath = `/${domain}/finds${parts.length ? '/' + parts.join('/') : ''}`;
 // CategoryTiles' thumbnails live at public/images/finds/{domain}/{parts}/{id}.jpg
@@ -43,7 +43,7 @@ if (!node.items && node.query) {
 }
 ---
 
-<BaseLayout title={node.label} domain={domain}>
+<BaseLayout title={node.label} description={nodeCategory?.summary} domain={domain}>
   <Breadcrumbs domain={domain} parts={['finds', ...parts]} />
 
   <div class="container mb-5 pb-5">
@@ -53,9 +53,9 @@ if (!node.items && node.query) {
         <hr />
       </>
     )}
-    {NodeIntro && (
+    {nodeCategory && (
       <>
-        <NodeIntro />
+        <div set:html={nodeCategory.bodyHtml} />
         <hr />
       </>
     )}
