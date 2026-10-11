@@ -125,14 +125,14 @@ function convertTags(articleId, html) {
 
   // [[map ...]]Title[[/map]] — single occurrence sitewide; kept generic in
   // case more appear later. Renders sCMS's own Map, centered on the point.
-  // client:only, not client:load: MapLibre draws to a <canvas> it fully
-  // owns, so there's no meaningful server-rendered markup to hydrate onto
-  // in the first place — client:load's SSR pass produces a mismatch (React
-  // error #418) even when the two renders are otherwise "the same".
+  // client:load, not client:only: only the SSR pass lets Astro see the
+  // component's `maplibre-gl.css` import and link it into the page <head>;
+  // with client:only the CSS is emitted but never linked, leaving the
+  // controls and popups unstyled in production builds.
   html = html.replace(/\[\[map([^\]]*)\]\](.*?)\[\[\/map\]\]/gs, (_, attrsRaw) => {
     const a = parseAttrs(attrsRaw);
     const [lat, lng] = (a.marker ?? '').split(',').map((s) => s.trim());
-    return `<Map client:only="react" center=${jsxAttr(`${lng},${lat},${a.zoom ?? 10}`)} height="400px" />`;
+    return `<Map client:load center=${jsxAttr(`${lng},${lat},${a.zoom ?? 10}`)} height="400px" />`;
   });
 
   // A few articles link straight to a media file (PDFs, mostly) via a plain
