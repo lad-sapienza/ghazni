@@ -10,7 +10,12 @@ publish: "2014-08-11"
 
 import { Map } from '@lad-sapienza/scms-core/components/Map';
 
-<Map client:only="react" center="68.4207415,33.5484037,5" height="400px" />
+<Map
+  client:only="react" 
+  
+  markers={{ lng: 68.4207415, lat: 33.5484037, label: 'Ghazni' }}
+  markersZoom="5"
+  height="400px" />
 
 The Italian Archaeological Mission in Afghanistan started its work in the summer of 1956, as part of the activities of the Italian Institute for the Middle and Far East (IsMEO, then IsIAO), with a visit to Ghazni by Giuseppe Tucci and Alessio Bombaci. The following summer two excavations were opened, which revealed two Islamic sites: a Ghaznavid palace (end of the 11th - early 12th century) and a private residence (end of the 12th - early 13th century). In 1959 the excavation of the Buddhist sanctuary of Tapa Sardar began.
 
