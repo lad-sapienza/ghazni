@@ -16,7 +16,7 @@
   "dependencies": {
     "@astrojs/check": "^0.9.10",
     "@astrojs/markdown-remark": "^7.2.4",
-    "@lad-sapienza/scms-core": "^0.1.0",
+    "@lad-sapienza/scms-core": "^0.1.1",
     "astro": "^7.2.4",
     "bootstrap": "^5.3.8",
     "maplibre-gl": "^6.7.0",

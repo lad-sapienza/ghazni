@@ -1,11 +1,6 @@
 ---
 import '../styles/global.css';
 import '../styles/ghazni.less';
-// scms-core's Map imports this itself, but in production builds Astro emits
-// that CSS without linking it into the article page's <head> (the Map is
-// rendered from MDX), leaving controls/popups unstyled. Import it here so it
-// always ships.
-import 'maplibre-gl/dist/maplibre-gl.css';
 import SEO from '@lad-sapienza/scms-core/components/SEO/SEO.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
