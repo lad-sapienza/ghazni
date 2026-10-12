@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Keyed on the run id (always a cache miss) with a prefix restore-key,
       # same trick as deploy.yml's BraDypUS image cache — picks up the most
