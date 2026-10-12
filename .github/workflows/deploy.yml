@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+  # Build-only check on PRs (e.g. Dependabot); nothing is published
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -12,7 +16,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  # PR builds get their own group so they never cancel a deploy running on main
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.ref) || 'pages' }}
   cancel-in-progress: true
 
 jobs:
@@ -50,12 +55,14 @@ jobs:
           BDUS_API_KEY: ${{ secrets.BDUS_API_KEY }}
 
       - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist/
 
   deploy:
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
