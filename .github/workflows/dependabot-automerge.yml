@@ -1,0 +1,32 @@
+name: Dependabot auto-merge (patch only)
+
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Grouped PRs: merge only if EVERY updated dependency is a patch.
+      # The merge itself waits for the required `build` check.
+      - name: Enable auto-merge for patch-only updates
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPDATES: ${{ steps.metadata.outputs.updated-dependencies-json }}
+        run: |
+          if echo "$UPDATES" | jq -e 'length > 0 and all(.[]; .updateType == "version-update:semver-patch")' > /dev/null; then
+            gh pr merge --auto --squash "$PR_URL"
+          else
+            echo "Not patch-only, leaving for manual review."
+          fi
