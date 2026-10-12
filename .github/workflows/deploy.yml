@@ -42,7 +42,7 @@ jobs:
       # exact match and saves a new cache at the end of the job; restore-keys
       # then picks up the most recent previous one to warm the download.
       - name: Restore BraDypUS image cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: public/images/bdus
           key: bdus-images-${{ github.run_id }}

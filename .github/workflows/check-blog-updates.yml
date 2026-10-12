@@ -37,7 +37,7 @@ jobs:
       # same trick as deploy.yml's BraDypUS image cache — picks up the most
       # recent previous run's value and always saves a fresh one.
       - name: Restore last-seen freshness marker
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: .blog-check-state
           key: blog-check-state-${{ github.run_id }}
@@ -58,7 +58,7 @@ jobs:
 
       - name: Save current marker for next run
         if: always()
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         with:
           path: .blog-check-state
           key: blog-check-state-${{ github.run_id }}
