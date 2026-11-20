@@ -1,29 +1,56 @@
 /**
- * Minimal BraDypUS v5 API client.
+ * BraDypUS v5 API client for ghazni.
  *
- * Build-time only: every call here runs inside Astro frontmatter / getStaticPaths
- * while `astro build` is running in Node, never in the browser. The API key
- * (BDUS_API_KEY, read-only privilege) therefore never reaches the client
- * bundle — see README "Updating the site" for why this matters for a fully
- * static, GitHub Pages–hosted site.
+ * Build-time only: every call here runs inside Astro frontmatter /
+ * getStaticPaths while `astro build` is running in Node, never in the
+ * browser. The API key (BDUS_API_KEY, read-only privilege) therefore never
+ * reaches the client bundle — see README "Updating the site" for why this
+ * matters for a fully static, GitHub Pages–hosted site.
+ *
+ * Thin wrapper around `@lad-sapienza/scms-core`'s shared bdus5 client
+ * (`.../integrations/bdusQuery`) rather than a reimplementation: this file
+ * now only keeps what's genuinely ghazni-specific —
+ *
+ * - The on-disk cache bridging `fetch-images.mjs` and `astro build` (two
+ *   separate Node processes within one `npm run build`; without it every
+ *   record got fetched twice — see DISK_CACHE_DIR below). The shared client
+ *   has no such cache (a published package can't assume a build pipeline
+ *   shaped like this one), so it stays local, wrapping the shared
+ *   `bdusRecord`.
+ * - `bdusQueryFull`'s single-object `{ tb, filter, ... }` signature and
+ *   concurrency-10 pooling (every call site in this app already expects
+ *   this exact shape) — ghazni's own `pool()`, calling the locally cached
+ *   `bdusRecord` below, not the shared `bdusQueryFull` (whose contract
+ *   differs: it takes `(config, tb, opts)` and returns records *flattened*
+ *   via `normalizeBdusRecord`, whereas every consumer here reads the raw
+ *   nested shape, e.g. `record.core?.invno?.val` — matching what the shared
+ *   client's own un-normalized `bdusRecord` already returns).
+ *
+ * What's delegated: the actual HTTP fetch, pagination and 429 retry/backoff
+ * (`bdusListAll`/`bdusRecord` from the shared client) — this file never had
+ * retry/backoff of its own, so that's a reliability improvement "for free".
  */
 import type { FilterNode } from './shortsql.ts';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
+import {
+  bdusListAll as sharedBdusListAll,
+  bdusRecord as sharedBdusRecord,
+  bdusFileUrl as sharedBdusFileUrl,
+  getBdusServerConfig,
+} from '@lad-sapienza/scms-core/integrations/bdusQuery';
 
-// import.meta.env when Vite processes this (Astro pages/components); plain
-// process.env when scripts/fetch-images.mjs imports it directly via Node.
-const env: Record<string, string | undefined> = { ...process.env, ...import.meta.env };
-const BASE_URL = env.BDUS_BASE_URL ?? 'https://bdus.lad-sapienza.it/ghazni';
-const API_KEY = env.BDUS_API_KEY;
-const MAX_PER_PAGE = 200;
-
-if (!API_KEY) {
+// getBdusServerConfig reads BDUS_BASE_URL/BDUS_API_KEY itself (process.env or
+// import.meta.env); the explicit baseUrl here is only the fallback default
+// this app has always had, for when BDUS_BASE_URL isn't set.
+const resolvedConfig = getBdusServerConfig('https://bdus.lad-sapienza.it/ghazni');
+if (!resolvedConfig || !resolvedConfig.apiKey) {
   throw new Error(
     'BDUS_API_KEY is not set. Copy .env.example to .env and fill in a read-only API key for the `ghazni` app (see README).'
   );
 }
+const config = resolvedConfig;
 
 // In-memory: the same find often shows up in a category grid, a record page
 // and a funerary-complex's linked-finds preview. Memoizing avoids re-fetching
@@ -46,43 +73,6 @@ function diskCachePath(cacheKey: string): string {
   return join(DISK_CACHE_DIR, `${hash}.json`);
 }
 
-async function bdusFetch(path: string, init?: RequestInit): Promise<any> {
-  const cacheKey = `${path}:${init?.body ?? ''}`;
-  const cached = cache.get(cacheKey);
-  if (cached) return cached;
-
-  const diskPath = diskCachePath(cacheKey);
-  if (existsSync(diskPath)) {
-    const promise = Promise.resolve(JSON.parse(readFileSync(diskPath, 'utf8')));
-    cache.set(cacheKey, promise);
-    return promise;
-  }
-
-  const promise = (async () => {
-    const res = await fetch(`${BASE_URL}${path}`, {
-      ...init,
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-        'Content-Type': 'application/json',
-        ...(init?.headers ?? {}),
-      },
-    });
-    if (!res.ok) {
-      throw new Error(`BraDypUS API ${path} -> HTTP ${res.status}: ${await res.text()}`);
-    }
-    const data = await res.json();
-    if (data.status === 'error') {
-      throw new Error(`BraDypUS API ${path} -> ${data.code ?? 'error'}: ${data.detail ?? ''}`);
-    }
-    mkdirSync(DISK_CACHE_DIR, { recursive: true });
-    writeFileSync(diskPath, JSON.stringify(data), 'utf8');
-    return data;
-  })();
-
-  cache.set(cacheKey, promise);
-  return promise;
-}
-
 export interface BdusListOptions {
   filter?: FilterNode;
   sortField?: string;
@@ -93,27 +83,30 @@ export interface BdusListOptions {
 
 /** Fetches every row matching a filter, paginating internally (v5 caps per_page at 200). */
 export async function bdusListAll(tb: string, opts: BdusListOptions = {}): Promise<any[]> {
-  const rows: any[] = [];
-  let page = 1;
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    const body = {
-      per_page: MAX_PER_PAGE,
-      page,
-      ...(opts.filter ? { filter: opts.filter } : {}),
-      ...(opts.sortField ? { sort_field: opts.sortField, sort_dir: opts.sortDir ?? 'asc' } : {}),
-    };
-    const data = await bdusFetch(`/api/records/${tb}`, { method: 'POST', body: JSON.stringify(body) });
-    rows.push(...data.data);
-    if (rows.length >= data.total || data.data.length === 0) break;
-    page++;
-  }
-  return opts.limit ? rows.slice(0, opts.limit) : rows;
+  return sharedBdusListAll(config, tb, opts);
 }
 
-/** Fetches the full nested record (core/plugins/files/schema) by internal numeric id. */
+/** Fetches the full nested record (core/plugins/files/schema) by internal numeric id — cached, see DISK_CACHE_DIR above. */
 export async function bdusRecord(tb: string, id: number | string): Promise<any> {
-  return bdusFetch(`/api/record/${tb}/${id}`);
+  const cacheKey = `record:${tb}:${id}`;
+  const cached = cache.get(cacheKey);
+  if (cached) return cached;
+
+  const diskPath = diskCachePath(cacheKey);
+  if (existsSync(diskPath)) {
+    const promise = Promise.resolve(JSON.parse(readFileSync(diskPath, 'utf8')));
+    cache.set(cacheKey, promise);
+    return promise;
+  }
+
+  const promise = sharedBdusRecord(config, tb, id).then((data) => {
+    mkdirSync(DISK_CACHE_DIR, { recursive: true });
+    writeFileSync(diskPath, JSON.stringify(data), 'utf8');
+    return data;
+  });
+
+  cache.set(cacheKey, promise);
+  return promise;
 }
 
 /** Runs `tasks` with at most `concurrency` in flight at once. */
@@ -185,5 +178,5 @@ export async function bdusFindOne(tb: string, field: string, value: string): Pro
 
 /** Public, unauthenticated URL for an uploaded file — same convention as the v4 site, new domain. */
 export function bdusFileUrl(fileId: number | string, ext: string): string {
-  return `https://bdus.lad-sapienza.it/projects/ghazni/files/${fileId}.${ext}`;
+  return sharedBdusFileUrl('ghazni', fileId, ext);
 }

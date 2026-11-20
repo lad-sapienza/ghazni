@@ -1,5 +1,8 @@
-#!/usr/bin/env node
-// --experimental-strip-types
+#!/usr/bin/env -S npx tsx
+// Run via tsx (not `node --experimental-strip-types`): bdus.ts now imports
+// @lad-sapienza/scms-core/integrations/bdusQuery, and Node's native type
+// stripping refuses .ts files under node_modules — tsx doesn't have that
+// restriction. See package.json's "fetch-images" script.
 /**
  * Pre-build step: downloads every BraDypUS-hosted image the site actually
  * references (taxonomy category pages + inline [[browseData]] embeds in
