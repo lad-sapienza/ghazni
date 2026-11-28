@@ -21,7 +21,7 @@ const defaultImg = '/images/css/image-not-available.jpg';
         const invNo = r.core?.inv_no?.val ?? r.core?.invno?.val;
         const measures = r.core?.measures?.val;
         const file = r.files?.[0];
-        const src = file ? localFileUrl(file.id, file.ext) : defaultImg;
+        const src = file ? localFileUrl(file.uuid, file.ext) : defaultImg;
         const href = hrefFor(invNo);
         const title = `Inv. no.: ${invNo}${measures ? ` Measures:${measures}` : ''}`;
         const image = <img src={src} alt="Record image" class="img-responsive img-thumbnail" loading="lazy" />;

@@ -22,7 +22,7 @@ const posts = await listPublishedPosts();
             <div class="col-sm-6">
               {post.coverFile && (
                 <img
-                  src={localFileUrl(post.coverFile.id, post.coverFile.ext)}
+                  src={localFileUrl(post.coverFile.uuid, post.coverFile.ext)}
                   class="img-fluid"
                   alt={post.title}
                 />

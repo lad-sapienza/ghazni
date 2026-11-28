@@ -20,7 +20,7 @@ const defaultImg = '/images/css/image-not-available.jpg';
         const invno = r.core?.invno?.val;
         const name = r.core?.name?.val;
         const file = r.files?.[0];
-        const src = file ? localFileUrl(file.id, file.ext) : defaultImg;
+        const src = file ? localFileUrl(file.uuid, file.ext) : defaultImg;
         return (
           <li>
             <div class="record">

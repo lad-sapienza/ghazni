@@ -17,9 +17,9 @@ export interface BlogPost {
   domain?: 'islamic' | 'buddhist';
   bodyHtml: string;
   /** First attached file — used as the post's cover image. */
-  coverFile?: { id: number; ext: string };
+  coverFile?: { uuid: string; ext: string };
   /** Every other attached image — rendered as a gallery below the post body. */
-  galleryFiles: { id: number; ext: string; description?: string }[];
+  galleryFiles: { uuid: string; ext: string; description?: string }[];
 }
 
 const IMAGE_EXTS = new Set(['jpg', 'jpeg', 'png', 'webp', 'gif']);
@@ -42,8 +42,8 @@ async function toBlogPost(record: any): Promise<BlogPost> {
     publishDate: val('publish_date') || undefined,
     domain: (val('domain') || undefined) as 'islamic' | 'buddhist' | undefined,
     bodyHtml: await renderMarkdown(val('body')),
-    coverFile: files[0] ? { id: files[0].id, ext: files[0].ext } : undefined,
-    galleryFiles: files.slice(1).map((f) => ({ id: f.id, ext: f.ext, description: f.description })),
+    coverFile: files[0] ? { uuid: files[0].uuid, ext: files[0].ext } : undefined,
+    galleryFiles: files.slice(1).map((f) => ({ uuid: f.uuid, ext: f.ext, description: f.description })),
   };
 }
 

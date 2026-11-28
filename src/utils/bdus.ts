@@ -37,7 +37,6 @@ import { createHash } from 'node:crypto';
 import {
   bdusListAll as sharedBdusListAll,
   bdusRecord as sharedBdusRecord,
-  bdusFileUrl as sharedBdusFileUrl,
   getBdusServerConfig,
 } from '@lad-sapienza/scms-core/integrations/bdusQuery';
 
@@ -174,9 +173,4 @@ export async function bdusFindOne(tb: string, field: string, value: string): Pro
   const matches = await bdusListAll(tb, { filter: { [field]: { _eq: value } }, limit: 1 });
   if (matches.length === 0) return null;
   return bdusRecord(tb, matches[0].id);
-}
-
-/** Public, unauthenticated URL for an uploaded file — same convention as the v4 site, new domain. */
-export function bdusFileUrl(fileId: number | string, ext: string): string {
-  return sharedBdusFileUrl('ghazni', fileId, ext);
 }

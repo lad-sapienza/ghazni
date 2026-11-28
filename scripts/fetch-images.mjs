@@ -39,6 +39,7 @@ rmSync(join(root, '.bdus-cache'), { recursive: true, force: true });
 const { flattenDomain } = await import('../src/utils/taxonomy.ts');
 const { bdusListAll, bdusRecord } = await import('../src/utils/bdus.ts');
 
+const baseUrl = (process.env.BDUS_BASE_URL || 'https://bdus.lad-sapienza.it/ghazni').replace(/\/$/, '');
 const outDir = join(root, 'public/images/bdus');
 mkdirSync(outDir, { recursive: true });
 const already = new Set(readdirSync(outDir));
@@ -143,11 +144,17 @@ await pool([...recordIds], 15, async (key) => {
     // legitimate webp uploads (a BraDypUS-side classification gap, not
     // this site's bug), so also accept a recognized image extension.
     if (!file.is_image && !IMAGE_EXTS.has(String(file.ext).toLowerCase())) continue;
-    const filename = `${file.id}.${file.ext.toLowerCase()}`;
+    if (!file.uuid) {
+      console.warn(`  ! file ${file.id} has no uuid (old API?) — skipped`);
+      continue;
+    }
+    const filename = `${file.uuid}.${file.ext.toLowerCase()}`;
     if (already.has(filename)) continue;
     already.add(filename); // reserve before await, so concurrent workers don't double-fetch
-    const url = `https://bdus.lad-sapienza.it/projects/ghazni/files/${file.id}.${file.ext}`;
-    const res = await fetch(url);
+    // Files are addressed by uuid and projects/{app}/files/ is no longer served:
+    // the original is read through the API, authenticated with the build key.
+    const url = `${baseUrl}/api/file/${file.uuid}`;
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${process.env.BDUS_API_KEY}` } });
     if (!res.ok) {
       console.warn(`  ! ${url} -> HTTP ${res.status}`);
       continue;

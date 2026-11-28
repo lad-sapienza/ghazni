@@ -23,7 +23,7 @@ const invNo = val('inv_no') ?? val('invno');
 const defaultImg = '/images/css/image-not-available.jpg';
 
 function fileUrl(f: any) {
-  return f ? localFileUrl(f.id, f.ext) : defaultImg;
+  return f ? localFileUrl(f.uuid, f.ext) : defaultImg;
 }
 
 const files: any[] = record.files ?? [];
@@ -32,7 +32,7 @@ const otherImages = files.slice(1).filter((f) => ['jpg', 'jpeg', 'png'].includes
 
 function toGalleryImage(f: any) {
   const src = fileUrl(f);
-  const { width, height } = localFileDimensions(f.id, f.ext);
+  const { width, height } = localFileDimensions(f.uuid, f.ext);
   return { src, thumb: src, width, height, alt: f.description ?? f.filename ?? String(invNo) };
 }
 const mainGalleryImage = files[0] ? [toGalleryImage(files[0])] : [];

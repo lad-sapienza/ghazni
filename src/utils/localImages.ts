@@ -1,5 +1,5 @@
 /**
- * Resolves a BraDypUS file id to its LOCAL path under /images/bdus/ —
+ * Resolves a BraDypUS file uuid to its LOCAL path under /images/bdus/ —
  * downloaded once by scripts/fetch-images.mjs (run before `astro build`,
  * see package.json), never hot-linked from the live site at runtime.
  *
@@ -20,14 +20,14 @@ function onDiskPath(filename: string): string {
   return join(process.cwd(), 'public/images/bdus', filename);
 }
 
-export function localFileUrl(fileId: number | string, ext: string): string {
-  const filename = `${fileId}.${ext.toLowerCase()}`;
+export function localFileUrl(fileUuid: string, ext: string): string {
+  const filename = `${fileUuid}.${ext.toLowerCase()}`;
   return existsSync(onDiskPath(filename)) ? `/images/bdus/${filename}` : DEFAULT_IMG;
 }
 
 /** Pixel dimensions of a downloaded record image — the Gallery/lightbox component needs these to lay out without content shift. */
-export function localFileDimensions(fileId: number | string, ext: string): { width: number; height: number } {
-  const filename = `${fileId}.${ext.toLowerCase()}`;
+export function localFileDimensions(fileUuid: string, ext: string): { width: number; height: number } {
+  const filename = `${fileUuid}.${ext.toLowerCase()}`;
   const path = onDiskPath(filename);
   if (existsSync(path)) {
     const result = probeSync(readFileSync(path));
